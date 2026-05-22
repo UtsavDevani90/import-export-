@@ -10,7 +10,7 @@ import axios from 'axios';
 
 // ── Base Axios instance ───────────────────────────────────────
 const api = axios.create({
-  baseURL:         import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL:         import.meta.env.VITE_API_URL || 'http://https://import-export-jhik.onrender.com/api',
   withCredentials: true,        // Send cookies with every request
   timeout:         15000,       // 15 second timeout
   headers: {
