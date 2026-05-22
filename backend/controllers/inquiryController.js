@@ -26,6 +26,7 @@ const submitInquiry = async (req, res, next) => {
       ipAddress: req.ip,
       userAgent:  req.get('user-agent'),
     });
+    console.log("Inserted Inquiry:", inquiry);
 
     // Send notification email — non-blocking
     emailService.sendInquiryNotification(inquiry).catch((err) => {
