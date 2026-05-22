@@ -1,0 +1,125 @@
+// controllers/authController.js — Admin authentication (PostgreSQL)
+// Handles registration, login, profile, and logout.
+
+const Admin         = require('../models/Admin');
+const generateToken = require('../utils/generateToken');
+const { sendSuccess, sendError } = require('../utils/apiResponse');
+const logger        = require('../utils/logger');
+
+// ── @route   POST /api/auth/register
+// ── @access  Public (disable or protect after first admin is created)
+const register = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    if (!name || !email || !password) {
+      return sendError(res, 400, 'Name, email, and password are required');
+    }
+
+    // Prevent duplicate accounts
+    const existing = await Admin.findByEmail(email);
+    if (existing) {
+      return sendError(res, 409, 'An admin with this email already exists');
+    }
+
+    const admin = await Admin.create({ name, email, password, role });
+    const token = generateToken({ id: admin.id, role: admin.role });
+
+    logger.info(`New admin registered: ${email}`);
+
+    return sendSuccess(res, 201, 'Admin registered successfully', { admin, token });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ── @route   POST /api/auth/login
+// ── @access  Public
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return sendError(res, 400, 'Email and password are required');
+    }
+
+    // Fetch admin WITH password hash
+    const admin = await Admin.findByEmail(email, true);
+
+    if (!admin || !(await Admin.comparePassword(password, admin.password))) {
+      return sendError(res, 401, 'Invalid email or password');
+    }
+
+    if (!admin.is_active) {
+      return sendError(res, 403, 'Your account has been deactivated');
+    }
+
+    // Update last login
+    const updated = await Admin.updateLastLogin(admin.id);
+
+    const token = generateToken({ id: admin.id, role: admin.role });
+
+    // Set secure httpOnly cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure:   process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge:   7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    logger.info(`Admin logged in: ${email}`);
+
+    return sendSuccess(res, 200, 'Login successful', {
+      admin: {
+        id:        updated.id,
+        name:      updated.name,
+        email:     updated.email,
+        role:      updated.role,
+        lastLogin: updated.last_login,
+      },
+      token,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ── @route   GET /api/auth/me
+// ── @access  Private
+const getMe = async (req, res) => {
+  return sendSuccess(res, 200, 'Profile fetched', req.admin);
+};
+
+// ── @route   PUT /api/auth/change-password
+// ── @access  Private
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    // Fetch admin WITH password hash for comparison
+    const admin = await Admin.findById(req.admin.id, true);
+
+    if (!(await Admin.comparePassword(currentPassword, admin.password))) {
+      return sendError(res, 401, 'Current password is incorrect');
+    }
+
+    if (!newPassword || newPassword.length < 8) {
+      return sendError(res, 400, 'New password must be at least 8 characters');
+    }
+
+    await Admin.updatePassword(admin.id, newPassword);
+
+    return sendSuccess(res, 200, 'Password changed successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ── @route   POST /api/auth/logout
+// ── @access  Private
+const logout = (req, res) => {
+  res.cookie('token', '', { expires: new Date(0), httpOnly: true });
+  return sendSuccess(res, 200, 'Logged out successfully');
+};
+
+module.exports = { register, login, getMe, changePassword, logout };

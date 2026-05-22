@@ -1,0 +1,20 @@
+# ─── Node & Build ─────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Environment ──────────────────────────────────────────
+.env
+.env.local
+.env.production
+
+# ─── Uploads & Logs ───────────────────────────────────────
+uploads/
+logs/*.log
+
+# ─── OS / Editor ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
