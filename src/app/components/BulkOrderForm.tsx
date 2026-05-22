@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { Package, User, Building2, Mail, Phone, Globe, MapPin, FileText, DollarSign, Truck, Calendar, CheckCircle2, Plus, Trash2 } from 'lucide-react';
 
@@ -29,10 +30,44 @@ export function BulkOrderForm() {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const inquiryData = {
+      name: formData.name,
+      company: formData.company,
+      email: formData.email,
+      phone: formData.phone,
+      country: formData.country,
+      product: productLines.map((p) => p.product).join(', '),
+      quantity: productLines.map((p) => p.quantity).join(', '),
+      message: formData.additionalInfo,
+      subject: 'Bulk Order Inquiry',
+    };
+
+    const response = await fetch(
+      'https://import-export-jhik.onrender.com/api/inquiries',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inquiryData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to submit inquiry');
+    }
+
     setSubmitted(true);
-  };
+
+  } catch (error) {
+    console.error('Inquiry Error:', error);
+    alert('Failed to submit inquiry');
+  }
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));

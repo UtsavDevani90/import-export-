@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { X, Send, Package, User, Globe, MessageSquare, Phone, Mail, CheckCircle2 } from 'lucide-react';
 
@@ -36,12 +37,31 @@ export function QuickInquiryPopup({ isOpen, onClose, productName }: QuickInquiry
     };
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(
+      'https://import-export-jhik.onrender.com/api/inquiries',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to submit inquiry');
+    }
+
     setSubmitted(true);
+
     setTimeout(() => {
       setSubmitted(false);
       onClose();
+
       setFormData({
         name: '',
         country: '',
@@ -52,7 +72,12 @@ export function QuickInquiryPopup({ isOpen, onClose, productName }: QuickInquiry
         message: '',
       });
     }, 3000);
-  };
+
+  } catch (error) {
+    console.error('Inquiry Error:', error);
+    alert('Failed to submit inquiry');
+  }
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
