@@ -51,6 +51,7 @@ const corsOptions = {
       process.env.CLIENT_URL || 'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:3000',
+      "https://import-export-ae4u.vercel.app"
     ];
     // Allow requests with no origin (Postman, curl, mobile)
     if (!origin || allowedOrigins.includes(origin)) {
