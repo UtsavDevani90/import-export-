@@ -22,7 +22,7 @@ export const products: Product[] = [
     shortDescription: "Premium quality golden turmeric with high curcumin content.",
     description:
       "Tanzora's Turmeric Powder is sourced from the finest Erode and Rajapuri varieties, renowned worldwide for their rich golden color and high curcumin content (3–5%). Processed under strict hygiene standards and exported globally.",
-    image: "https://images.unsplash.com/photo-1608797178894-bf7c596932da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JpYW5kZXIlMjBwb3dkZXIlMjBzcGljZSUyMGdvbGRlbnxlbnwxfHx8fDE3Nzg1NzQ5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/turmeric-powder.jpg.jpeg",
     moq: "500 kg",
     packaging: ["25 kg PP Bags", "50 kg PP Bags", "Custom Packaging Available"],
     specifications: [
@@ -63,7 +63,7 @@ export const products: Product[] = [
     shortDescription: "King of spices – bold aroma and robust flavor.",
     description:
       "Known as the 'King of Spices', our Black Pepper is sourced from Kerala's Malabar Coast. Available in whole, cracked, and ground formats, it offers a bold aroma and robust flavor that is in high demand across global food industries.",
-    image: "https://images.unsplash.com/photo-1769614596747-860600b5f2f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMHBlcHBlciUyMGN1bWluJTIwc2VlZHMlMjBzcGljZXN8ZW58MXx8fHwxNzc4NTc0OTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/Black-pepper-benefits.jpg.webp",
     moq: "250 kg",
     packaging: ["10 kg Cartons", "25 kg PP Bags", "50 kg Jute Bags"],
     specifications: [
@@ -83,7 +83,7 @@ export const products: Product[] = [
     shortDescription: "Aromatic cumin seeds from Gujarat's finest farms.",
     description:
       "Tanzora's Cumin Seeds are sourced from Unjha, Gujarat — India's largest cumin trading hub. Rich in essential oils and earthy aroma, these seeds are a cornerstone of Middle Eastern, European, and Asian cuisine.",
-    image: "https://images.unsplash.com/photo-1769614596747-860600b5f2f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMHBlcHBlciUyMGN1bWluJTIwc2VlZHMlMjBzcGljZXN8ZW58MXx8fHwxNzc4NTc0OTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/cumin1_1000x.jpg.jpeg",
     moq: "500 kg",
     packaging: ["25 kg PP Bags", "50 kg PP Bags", "Bulk Containers"],
     specifications: [
@@ -103,7 +103,7 @@ export const products: Product[] = [
     shortDescription: "Finely ground coriander with a warm citrusy fragrance.",
     description:
       "Our Coriander Powder is made from premium Eagle variety coriander seeds, offering a distinctive warm citrus aroma. Popular in Europe, the Middle East, and Southeast Asia for its versatile culinary applications.",
-    image: "https://images.unsplash.com/photo-1608797178894-bf7c596932da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JpYW5kZXIlMjBwb3dkZXIlMjBzcGljZSUyMGdvbGRlbnxlbnwxfHx8fDE3Nzg1NzQ5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/coriander-powder.jpg.jpeg",
     moq: "500 kg",
     packaging: ["25 kg PP Bags", "50 kg PP Bags"],
     specifications: [
@@ -123,7 +123,7 @@ export const products: Product[] = [
     shortDescription: "Aromatic cloves with high eugenol content.",
     description:
       "Premium grade cloves sourced from Kerala and Tamil Nadu. Our cloves have high eugenol content (70–85%), making them highly valued by pharmaceutical, food, and fragrance industries worldwide.",
-    image: "https://images.unsplash.com/photo-1765118433463-93af73bc8ff9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaW5uYW1vbiUyMGNsb3ZlcyUyMHNwaWNlJTIwbWl4fGVufDF8fHx8MTc3ODU3NDkwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/cloves.jpg.webp",
     moq: "100 kg",
     packaging: ["10 kg Cartons", "25 kg PP Bags", "Custom Packaging"],
     specifications: [
@@ -143,7 +143,7 @@ export const products: Product[] = [
     shortDescription: "True cinnamon sticks with sweet warm aroma.",
     description:
       "Tanzora's Cinnamon sticks come in both Ceylon (True Cinnamon) and Cassia varieties. With a naturally sweet and warm aroma, our cinnamon is widely exported to bakery, beverage, and pharmaceutical sectors.",
-    image: "https://images.unsplash.com/photo-1765118433463-93af73bc8ff9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaW5uYW1vbiUyMGNsb3ZlcyUyMHNwaWNlJTIwbWl4fGVufDF8fHx8MTc3ODU3NDkwMnww&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/Cinnamon.jpg.jpeg",
     moq: "250 kg",
     packaging: ["10 kg Cartons", "25 kg PP Bags"],
     specifications: [
@@ -163,7 +163,7 @@ export const products: Product[] = [
     shortDescription: "Pungent carom seeds rich in thymol – a digestive powerhouse.",
     description:
       "Ajwain (Carom Seeds) from Rajasthan are prized for their high thymol content (35–60%), making them essential in pharmaceutical and food industries. Known for strong aroma and digestive properties.",
-    image: "https://images.unsplash.com/photo-1769614596747-860600b5f2f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMHBlcHBlciUyMGN1bWluJTIwc2VlZHMlMjBzcGljZXN8ZW58MXx8fHwxNzc4NTc0OTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/Ajwain-Seeds.jpg.jpeg",
     moq: "500 kg",
     packaging: ["25 kg PP Bags", "50 kg PP Bags"],
     specifications: [
@@ -183,7 +183,7 @@ export const products: Product[] = [
     shortDescription: "Milder white pepper ideal for light-colored dishes.",
     description:
       "Tanzora's White Pepper is produced from fully ripe black pepper berries with the outer husk removed. Offering a milder, more refined heat, it is preferred by European chefs, food manufacturers, and pharmaceutical industries.",
-    image: "https://images.unsplash.com/photo-1769614596747-860600b5f2f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibGFjayUyMHBlcHBlciUyMGN1bWluJTIwc2VlZHMlMjBzcGljZXN8ZW58MXx8fHwxNzc4NTc0OTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/white-pepper-whole.jpg.jpeg",
     moq: "250 kg",
     packaging: ["10 kg Cartons", "25 kg PP Bags"],
     specifications: [
@@ -203,7 +203,7 @@ export const products: Product[] = [
     shortDescription: "Authentic blend of whole spices for rich, layered flavor.",
     description:
       "Our Garam Masala is a premium spice blend crafted from the finest whole spices including cinnamon, cardamom, cloves, black pepper, cumin, and more. Perfect for food manufacturers and restaurant chains.",
-    image: "https://images.unsplash.com/photo-1768729341078-9da4e0ea959e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBzcGljZXMlMjBjb2xvcmZ1bCUyMHR1cm1lcmljJTIwZXhwb3J0fGVufDF8fHx8MTc3ODU3NDg5OHww&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "/images/Garam-Masala.jpg.jpeg",
     moq: "500 kg",
     packaging: ["25 kg PP Bags", "Custom Retail Packaging"],
     specifications: [
