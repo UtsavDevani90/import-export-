@@ -112,7 +112,11 @@ export function Navbar() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group">
               <div className="transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_12px_rgba(212,160,23,0.5)]">
-                <TanzoraLogoMark size={44}/>
+                <img 
+                src="/logo.png"
+                alt="Tanzora Export"
+                className="w-12 h-12 object-contain"
+                />
               </div>
               <div>
                 <div className="font-bold text-base lg:text-lg leading-none text-white group-hover:text-[#f0c040] transition-colors" style={{ letterSpacing:"0.12em" }}>TANZORA</div>
