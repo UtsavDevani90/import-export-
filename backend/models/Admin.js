@@ -68,4 +68,54 @@ const comparePassword = async (plainText, hash) => {
   return bcrypt.compare(plainText, hash);
 };
 
-module.exports = { findByEmail, findById, create, updateLastLogin, updatePassword, comparePassword };
+// ── Find all admins (exclude password) ────────────────────────
+const findAll = async () => {
+  const { rows } = await pool.query(
+    `SELECT id, name, email, role, is_active, last_login, created_at, updated_at 
+     FROM admins 
+     ORDER BY name ASC`
+  );
+  return rows;
+};
+
+// ── Update active status ──────────────────────────────────────
+const updateStatus = async (id, isActive) => {
+  const { rows } = await pool.query(
+    `UPDATE admins SET is_active = $1, updated_at = NOW() WHERE id = $2 
+     RETURNING id, name, email, role, is_active, last_login, created_at, updated_at`,
+    [isActive, id]
+  );
+  return rows[0] || null;
+};
+
+// ── Update admin role ─────────────────────────────────────────
+const updateRole = async (id, role) => {
+  const { rows } = await pool.query(
+    `UPDATE admins SET role = $1, updated_at = NOW() WHERE id = $2 
+     RETURNING id, name, email, role, is_active, last_login, created_at, updated_at`,
+    [role, id]
+  );
+  return rows[0] || null;
+};
+
+// ── Remove an admin ───────────────────────────────────────────
+const remove = async (id) => {
+  const { rows } = await pool.query(
+    `DELETE FROM admins WHERE id = $1 RETURNING id, name, email`,
+    [id]
+  );
+  return rows[0] || null;
+};
+
+module.exports = { 
+  findByEmail, 
+  findById, 
+  create, 
+  updateLastLogin, 
+  updatePassword, 
+  comparePassword,
+  findAll,
+  updateStatus,
+  updateRole,
+  remove
+};

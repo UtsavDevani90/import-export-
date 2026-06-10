@@ -1,6 +1,7 @@
 // controllers/inquiryController.js — Contact form inquiry management (PostgreSQL)
 // Public: submit inquiry.  Admin: list, view, update status, delete.
 
+const { pool }      = require('../config/db');
 const Inquiry       = require('../models/Inquiry');
 const emailService  = require('../services/emailService');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
@@ -127,7 +128,49 @@ const deleteInquiry = async (req, res, next) => {
   }
 };
 
+// ── @route   POST /api/inquiries/:id/notes
+// ── @access  Private/Admin
+const addInquiryNote = async (req, res, next) => {
+  try {
+    const { note } = req.body;
+    if (!note?.trim()) return sendError(res, 400, 'Note text is required');
+
+    const { rows } = await pool.query(
+      `INSERT INTO inquiry_notes (inquiry_id, admin_id, admin_name, note)
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [req.params.id, req.admin.id, req.admin.name, note.trim()]
+    );
+
+    // Log to activity_logs — non-blocking
+    const ActivityLog = require('../models/ActivityLog');
+    await ActivityLog.insert({
+      adminId:     req.admin.id,
+      adminName:   req.admin.name,
+      action:      'inquiry.note_added',
+      entityType:  'inquiry',
+      entityId:    req.params.id,
+      details:     { note: note.trim().substring(0, 100) },
+      ipAddress:   req.ip,
+    }).catch(() => {});
+
+    return sendSuccess(res, 201, 'Note added', rows[0]);
+  } catch (err) { next(err); }
+};
+
+// ── @route   GET /api/inquiries/:id/notes
+// ── @access  Private/Admin
+const getInquiryNotes = async (req, res, next) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM inquiry_notes WHERE inquiry_id = $1 ORDER BY created_at DESC`,
+      [req.params.id]
+    );
+    return sendSuccess(res, 200, 'Notes fetched', rows);
+  } catch (err) { next(err); }
+};
+
 module.exports = {
   submitInquiry, getInquiries, getInquiry,
   updateInquiryStatus, deleteInquiry,
+  addInquiryNote, getInquiryNotes,
 };

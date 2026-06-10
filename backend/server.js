@@ -28,6 +28,12 @@ const inquiryRoutes     = require('./routes/inquiryRoutes');
 const blogRoutes        = require('./routes/blogRoutes');
 const certificateRoutes = require('./routes/certificateRoutes');
 const dashboardRoutes   = require('./routes/dashboardRoutes');
+const buyerRoutes       = require('./routes/buyerRoutes');
+const quotationRoutes   = require('./routes/quotationRoutes');
+const cmsRoutes         = require('./routes/cmsRoutes');
+const settingsRoutes    = require('./routes/settingsRoutes');
+const activityLogRoutes = require('./routes/activityLogRoutes');
+const adminRoutes       = require('./routes/adminRoutes');
 
 // ── Connect to PostgreSQL ─────────────────────────────────────
 connectDB();
@@ -135,6 +141,12 @@ app.use('/api/inquiries',    inquiryRoutes);
 app.use('/api/blogs',        blogRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/dashboard',    dashboardRoutes);
+app.use('/api/buyers',       buyerRoutes);
+app.use('/api/quotations',   quotationRoutes);
+app.use('/api/cms',          cmsRoutes);
+app.use('/api/settings',     settingsRoutes);
+app.use('/api/activity-logs', activityLogRoutes);
+app.use('/api/admins',        adminRoutes);
 
 // ── Health check endpoint ─────────────────────────────────────
 app.get('/api/health', (req, res) => {

@@ -30,9 +30,32 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ── Response interceptor: handle 401 globally ─────────────────
+// Helper to recursively map id -> _id for frontend compatibility
+const addUnderscoreId = (obj) => {
+  if (!obj || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) {
+    return obj.map(addUnderscoreId);
+  }
+  const newObj = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[key] = addUnderscoreId(obj[key]);
+    }
+  }
+  if (newObj.id && newObj._id === undefined) {
+    newObj._id = newObj.id;
+  }
+  return newObj;
+};
+
+// ── Response interceptor: handle 401 globally & map id to _id ──
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data) {
+      response.data = addUnderscoreId(response.data);
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('tanzora_token');
@@ -123,4 +146,68 @@ export const dashboardService = {
   getStats: () => api.get('/dashboard/stats'),
 };
 
+// ════════════════════════════════════════════════════════════
+//  BUYER SERVICE (Admin only)
+// ════════════════════════════════════════════════════════════
+export const buyerService = {
+  getAll:   (params) => api.get('/buyers', { params }),
+  getById:  (id)     => api.get(`/buyers/${id}`),
+  create:   (data)   => api.post('/buyers', data),
+  update:   (id, d)  => api.put(`/buyers/${id}`, d),
+  delete:   (id)     => api.delete(`/buyers/${id}`),
+};
+
+// ════════════════════════════════════════════════════════════
+//  QUOTATION SERVICE (Admin only)
+// ════════════════════════════════════════════════════════════
+export const quotationService = {
+  getAll:   (params) => api.get('/quotations', { params }),
+  getById:  (id)     => api.get(`/quotations/${id}`),
+  getPdf:   (id)     => api.get(`/quotations/${id}/pdf`, { responseType: 'blob' }),
+  create:   (data)   => api.post('/quotations', data),
+  update:   (id, d)  => api.put(`/quotations/${id}`, d),
+  delete:   (id)     => api.delete(`/quotations/${id}`),
+};
+
+// ════════════════════════════════════════════════════════════
+//  CMS SERVICE
+// ════════════════════════════════════════════════════════════
+export const cmsService = {
+  getTestimonials:    (p)    => api.get('/cms/testimonials', { params: p }),
+  createTestimonial:  (d)    => api.post('/cms/testimonials', d),
+  updateTestimonial:  (id,d) => api.put(`/cms/testimonials/${id}`, d),
+  deleteTestimonial:  (id)   => api.delete(`/cms/testimonials/${id}`),
+  reorderTestimonials:(orderedIds) => api.put('/cms/testimonials/reorder', { orderedIds }),
+  getFaqs:            (p)    => api.get('/cms/faqs', { params: p }),
+  createFaq:          (d)    => api.post('/cms/faqs', d),
+  updateFaq:          (id,d) => api.put(`/cms/faqs/${id}`, d),
+  deleteFaq:          (id)   => api.delete(`/cms/faqs/${id}`),
+  getStats:           ()     => api.get('/cms/stats'),
+  updateStats:        (d)    => api.put('/cms/stats', d),
+};
+
+// ════════════════════════════════════════════════════════════
+//  SETTINGS SERVICE (Admin only)
+// ════════════════════════════════════════════════════════════
+export const settingsService = {
+  getAll:   ()    => api.get('/settings'),
+  update:   (d)   => api.put('/settings', d),
+};
+
+// ════════════════════════════════════════════════════════════
+//  ACTIVITY LOG SERVICE (Admin only)
+// ════════════════════════════════════════════════════════════
+export const activityLogService = {
+  getAll: (p) => api.get('/activity-logs', { params: p }),
+};
+
+// ════════════════════════════════════════════════════════════
+//  INQUIRY NOTES (Admin only)
+// ════════════════════════════════════════════════════════════
+export const inquiryNoteService = {
+  getAll:    (inquiryId)       => api.get(`/inquiries/${inquiryId}/notes`),
+  addNote:   (inquiryId, note) => api.post(`/inquiries/${inquiryId}/notes`, { note }),
+};
+
 export default api;
+

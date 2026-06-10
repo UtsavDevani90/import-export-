@@ -1,6 +1,7 @@
 // controllers/dashboardController.js — Admin dashboard statistics (PostgreSQL)
 // Returns aggregated counts and recent activity for the dashboard overview.
 
+const { pool }    = require('../config/db');
 const Product     = require('../models/Product');
 const Inquiry     = require('../models/Inquiry');
 const Blog        = require('../models/Blog');
@@ -22,6 +23,11 @@ const getDashboardStats = async (req, res, next) => {
       totalCertificates,
       recentInquiries,
       inquiryStatusRows,
+      buyerCountResult,
+      quotationCountResult,
+      sentQuotationCountResult,
+      recentBuyersResult,
+      recentQuotationsResult,
     ] = await Promise.all([
       Product.countDocuments({}),
       Product.countDocuments({ status: 'active' }),
@@ -41,6 +47,28 @@ const getDashboardStats = async (req, res, next) => {
 
       // Aggregate inquiry counts per status
       Inquiry.aggregateByStatus(),
+
+      // Buyer statistics
+      pool.query('SELECT COUNT(*) FROM buyers'),
+      pool.query('SELECT COUNT(*) FROM quotations'),
+      pool.query("SELECT COUNT(*) FROM quotations WHERE status = $1", ['sent']),
+
+      // Recent buyers
+      pool.query(
+        `SELECT id, name, company, country, email, created_at
+         FROM buyers
+         ORDER BY created_at DESC
+         LIMIT 5`
+      ),
+
+      // Recent quotations
+      pool.query(
+        `SELECT id, quote_number, buyer_name, buyer_company, status,
+                total_amount, currency, created_at
+         FROM quotations
+         ORDER BY created_at DESC
+         LIMIT 5`
+      ),
     ]);
 
     // Reshape status rows into { new: N, read: N, … }
@@ -48,6 +76,12 @@ const getDashboardStats = async (req, res, next) => {
     for (const row of inquiryStatusRows) {
       statusMap[row.status] = parseInt(row.count);
     }
+
+    const totalBuyers       = parseInt(buyerCountResult.rows[0].count);
+    const totalQuotations   = parseInt(quotationCountResult.rows[0].count);
+    const sentQuotations    = parseInt(sentQuotationCountResult.rows[0].count);
+    const recentBuyers      = recentBuyersResult.rows;
+    const recentQuotations  = recentQuotationsResult.rows;
 
     return sendSuccess(res, 200, 'Dashboard stats', {
       products: {
@@ -67,6 +101,16 @@ const getDashboardStats = async (req, res, next) => {
       certificates: {
         total: totalCertificates,
       },
+      buyers: {
+        total:  totalBuyers,
+        recent: recentBuyers,
+      },
+      quotations: {
+        total:  totalQuotations,
+        sent:   sentQuotations,
+        recent: recentQuotations,
+      },
+      recentBuyers,
     });
   } catch (err) {
     next(err);

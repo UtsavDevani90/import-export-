@@ -20,6 +20,14 @@ import IndustriesServed from "./pages/IndustriesServed";
 import QualityControl from "./pages/QualityControl";
 import Sustainability from "./pages/Sustainability";
 import ManufacturingProcess from "./pages/ManufacturingProcess";
+import { Overview } from "./pages/dashboard/Overview";
+import { Inquiries } from "./pages/dashboard/Inquiries";
+import { DashboardProducts } from "./pages/dashboard/Products";
+import { Buyers } from "./pages/dashboard/Buyers";
+import { Quotations } from "./pages/dashboard/Quotations";
+import { CMS } from "./pages/dashboard/CMS";
+import { Settings } from "./pages/dashboard/Settings";
+import { ActivityLogs } from "./pages/dashboard/ActivityLogs";
 
 export const router = createBrowserRouter([
   {
@@ -42,10 +50,23 @@ export const router = createBrowserRouter([
       { path: "manufacturing", Component: ManufacturingProcess },
       { path: "blog", Component: Blog },
       { path: "blog/:slug", Component: BlogDetail },
-      { path: "dashboard", Component: Dashboard },
       { path: "login", Component: Login },
       { path: "signup", Component: Signup },
       { path: "forgot-password", Component: ForgotPassword },
+      {
+        path: "dashboard",
+        Component: Dashboard,
+        children: [
+          { index: true, Component: Overview },
+          { path: "inquiries", Component: Inquiries },
+          { path: "products", Component: DashboardProducts },
+          { path: "buyers", Component: Buyers },
+          { path: "quotations", Component: Quotations },
+          { path: "cms", Component: CMS },
+          { path: "settings", Component: Settings },
+          { path: "logs", Component: ActivityLogs },
+        ],
+      },
     ],
   },
 ]);
