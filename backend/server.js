@@ -56,12 +56,13 @@ const corsOptions = {
     // Strip trailing slash from CLIENT_URL (browsers never include it in Origin headers)
     const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
     const allowedOrigins = [
-      clientUrl,
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:3000',
-      'https://import-export-ae4u.vercel.app',
-    ];
+  clientUrl,
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+  'https://import-export-ae4u.vercel.app',
+  'https://import-export-pink.vercel.app',
+];
     // Allow requests with no origin (Postman, curl, mobile)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);

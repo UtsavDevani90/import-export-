@@ -29,7 +29,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 //     After running this script, log in and change your password via the dashboard.
 const ADMINS = [
   {
-    name:     'Utsav Devani',
+    name:     'Utsav Devani', 
    email: 'utsavdevani90@gmail.com',
    password: 'TanzoraAdmin123',      // ← CHANGE THIS before running
     role:     'superadmin',
