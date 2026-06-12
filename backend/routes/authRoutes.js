@@ -2,7 +2,7 @@
 const express = require('express');
 const router  = express.Router();
 const {
-  register, login, getMe, changePassword, logout,
+  register, login, getMe, changePassword, logout, debugConnection,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -20,5 +20,9 @@ router.put('/change-password', protect, changePassword);
 
 // POST /api/auth/logout
 router.post('/logout', protect, logout);
+
+// GET  /api/auth/debug-connection  — Verify DB + env (safe to expose, no secrets returned)
+// Usage: GET /api/auth/debug-connection?email=utsavdevani90@gmail.com
+router.get('/debug-connection', debugConnection);
 
 module.exports = router;
