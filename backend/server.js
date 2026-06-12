@@ -34,6 +34,10 @@ const cmsRoutes         = require('./routes/cmsRoutes');
 const settingsRoutes    = require('./routes/settingsRoutes');
 const activityLogRoutes = require('./routes/activityLogRoutes');
 const adminRoutes       = require('./routes/adminRoutes');
+// ── New dual-dashboard routes ───────────────────────────────────────
+const userAuthRoutes    = require('./routes/userAuthRoutes');
+const userRoutes        = require('./routes/userRoutes');
+const adminUserRoutes   = require('./routes/adminUserRoutes');
 
 // ── Connect to PostgreSQL ─────────────────────────────────────
 connectDB();
@@ -98,7 +102,8 @@ const authLimiter = rateLimit({
 });
 
 app.use('/api/', limiter);
-app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/login',       authLimiter); // Admin login rate limit
+app.use('/api/users/auth/login', authLimiter); // User login rate limit
 
 // ═══════════════════════════════════════════════════════════
 //  PHASE 2 — PARSING & SANITIZATION MIDDLEWARE
@@ -139,18 +144,22 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //  PHASE 5 — API ROUTES
 // ═══════════════════════════════════════════════════════════
 
-app.use('/api/auth',         authRoutes);
-app.use('/api/products',     productRoutes);
-app.use('/api/inquiries',    inquiryRoutes);
-app.use('/api/blogs',        blogRoutes);
-app.use('/api/certificates', certificateRoutes);
-app.use('/api/dashboard',    dashboardRoutes);
-app.use('/api/buyers',       buyerRoutes);
-app.use('/api/quotations',   quotationRoutes);
-app.use('/api/cms',          cmsRoutes);
-app.use('/api/settings',     settingsRoutes);
+app.use('/api/auth',          authRoutes);
+app.use('/api/products',      productRoutes);
+app.use('/api/inquiries',     inquiryRoutes);
+app.use('/api/blogs',         blogRoutes);
+app.use('/api/certificates',  certificateRoutes);
+app.use('/api/dashboard',     dashboardRoutes);
+app.use('/api/buyers',        buyerRoutes);
+app.use('/api/quotations',    quotationRoutes);
+app.use('/api/cms',           cmsRoutes);
+app.use('/api/settings',      settingsRoutes);
 app.use('/api/activity-logs', activityLogRoutes);
 app.use('/api/admins',        adminRoutes);
+// ── User portal routes ───────────────────────────────────────────────
+app.use('/api/users/auth',    userAuthRoutes);
+app.use('/api/users',         userRoutes);
+app.use('/api/admin/users',   adminUserRoutes);
 
 // ── Health check endpoint ─────────────────────────────────────
 app.get('/api/health', (req, res) => {

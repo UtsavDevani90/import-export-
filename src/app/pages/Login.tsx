@@ -6,22 +6,22 @@ import { useAuth } from "../context/AuthContext";
 const SPICE_BG = "https://images.unsplash.com/photo-1768729341078-9da4e0ea959e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80";
 
 export function Login() {
-  const [email, setEmail] = useState("");
+  const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
+  const [showPw,   setShowPw]   = useState(false);
   const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const { login } = useAuth();
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState("");
+  const { userLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) { setError("Please fill in all fields."); return; }
     setLoading(true); setError("");
-    const ok = await login(email, password, remember);
-    if (ok) navigate("/dashboard");
-    else { setError("Invalid credentials. Please try again."); setLoading(false); }
+    const { ok, error: msg } = await userLogin(email, password, remember);
+    if (ok) navigate("/user/dashboard");
+    else { setError(msg || "Invalid credentials. Please try again."); setLoading(false); }
   };
 
   return (
@@ -135,7 +135,11 @@ export function Login() {
 
           <p className="text-center text-white/40 text-sm mt-6">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-[#d4a017] hover:underline font-medium">Create Account <ArrowRight size={13} className="inline"/></Link>
+            <Link to="/register" className="text-[#d4a017] hover:underline font-medium">Create Account <ArrowRight size={13} className="inline"/></Link>
+          </p>
+          <p className="text-center text-white/20 text-xs mt-3">
+            Are you an admin?{" "}
+            <Link to="/admin/login" className="text-white/40 hover:text-[#d4a017] hover:underline transition-colors">Admin Portal →</Link>
           </p>
         </div>
       </div>

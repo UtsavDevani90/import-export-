@@ -28,7 +28,7 @@ export function Signup() {
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { signup } = useAuth();
+  const { userRegister } = useAuth();
   const navigate = useNavigate();
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
@@ -38,8 +38,15 @@ export function Signup() {
     if (form.password !== form.confirm) { setError("Passwords do not match."); return; }
     if (!agreed) { setError("Please accept the terms and conditions."); return; }
     setLoading(true); setError("");
-    await signup({ name: form.name, company: form.company, email: form.email, country: form.country, password: form.password });
-    navigate("/dashboard");
+    const { ok, error: msg } = await userRegister({
+      full_name:    form.name,
+      email:        form.email,
+      password:     form.password,
+      company_name: form.company || undefined,
+      country:      form.country || undefined,
+    });
+    if (ok) navigate("/user/dashboard");
+    else { setError(msg || "Registration failed. Please try again."); setLoading(false); }
   };
 
   return (

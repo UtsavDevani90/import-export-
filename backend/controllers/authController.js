@@ -94,7 +94,7 @@ const login = async (req, res, next) => {
     // ── Step 5: Generate JWT ──────────────────────────────────────
     let token;
     try {
-      token = generateToken({ id: admin.id, role: admin.role });
+      token = generateToken({ id: admin.id, role: admin.role, type: 'admin' });
       logger.info(`${logTag} JWT generated successfully for: ${email}`);
       console.log(`${logTag} JWT generated: ${token ? 'YES' : 'NO'} | JWT_SECRET set: ${!!process.env.JWT_SECRET}`);
     } catch (jwtErr) {
@@ -106,7 +106,7 @@ const login = async (req, res, next) => {
     // ── Step 6: Set cookie ────────────────────────────────────────
     // SameSite=None + Secure=true is required for cross-origin Vercel ↔ Render
     const isProduction = process.env.NODE_ENV === 'production';
-    res.cookie('token', token, {
+    res.cookie('admin_token', token, {
       httpOnly: true,
       secure:   isProduction,
       sameSite: isProduction ? 'none' : 'lax',
@@ -167,7 +167,7 @@ const changePassword = async (req, res, next) => {
 // ── @route   POST /api/auth/logout
 // ── @access  Private
 const logout = (req, res) => {
-  res.cookie('token', '', { expires: new Date(0), httpOnly: true });
+  res.cookie('admin_token', '', { expires: new Date(0), httpOnly: true });
   return sendSuccess(res, 200, 'Logged out successfully');
 };
 

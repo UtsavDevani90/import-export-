@@ -1,0 +1,153 @@
+import { useState } from "react";
+import { Link, useNavigate, useLocation, Outlet } from "react-router";
+import {
+  LayoutDashboard, MessageSquare, FileText, Heart,
+  Bell, Settings, LogOut, Menu, X, Globe, Award, User
+} from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { UserRoute } from "../../components/guards/UserRoute";
+
+const NAV = [
+  { icon: LayoutDashboard, label: "Overview",       path: "/user/dashboard" },
+  { icon: MessageSquare,   label: "My Inquiries",   path: "/user/inquiries" },
+  { icon: FileText,        label: "My Quotations",  path: "/user/quotations" },
+  { icon: Award,           label: "Certificates",   path: "/user/certificates" },
+  { icon: Heart,           label: "Favorites",      path: "/user/favorites" },
+  { icon: Bell,            label: "Notifications",  path: "/user/notifications" },
+  { icon: Settings,        label: "Account",        path: "/user/settings" },
+];
+
+function UserDashboardInner() {
+  const { user, userLogout }   = useAuth();
+  const navigate               = useNavigate();
+  const location               = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = () => { userLogout(); navigate("/"); };
+
+  const isActive = (path: string) =>
+    path === "/user/dashboard"
+      ? location.pathname === "/user/dashboard"
+      : location.pathname.startsWith(path);
+
+  const initials = user?.name?.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) || "U";
+
+  return (
+    <div className="min-h-screen flex" style={{ background: "#070707" }}>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/60 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* ── Sidebar ─────────────────────────────────────────────── */}
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        style={{ background: "#0a0a0a", borderRight: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        {/* Logo */}
+        <div className="p-5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-[#0a0a0a] text-lg" style={{ background: "linear-gradient(135deg,#d4a017,#b8860b)" }}>T</div>
+            <div>
+              <div className="text-white font-bold text-sm" style={{ letterSpacing: "0.1em" }}>TANZORA</div>
+              <div className="text-[#d4a017] text-[8px]" style={{ letterSpacing: "0.25em" }}>EXPORT CO.</div>
+            </div>
+          </Link>
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-white/40 hover:text-white">
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* User Avatar */}
+        <div className="p-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-[#0a0a0a] text-sm shrink-0" style={{ background: "linear-gradient(135deg,#d4a017,#b8860b)" }}>
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-white font-semibold text-sm truncate">{user?.name}</div>
+              <div className="text-white/35 text-xs">{user?.company || "Portal Member"}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          {NAV.map(item => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setSidebarOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
+                style={active
+                  ? { background: "rgba(212,160,23,0.12)", color: "#d4a017", border: "1px solid rgba(212,160,23,0.2)" }
+                  : { color: "rgba(255,255,255,0.45)", border: "1px solid transparent" }}
+              >
+                <Icon size={16} />
+                <span className="flex-1">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Bottom */}
+        <div className="p-3 space-y-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <Link to="/" className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/35 hover:text-white hover:bg-white/5 transition-all">
+            <Globe size={16} /> View Website
+          </Link>
+          <Link to="/user/settings" className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/35 hover:text-white hover:bg-white/5 transition-all">
+            <User size={16} /> My Profile
+          </Link>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/35 hover:text-red-400 hover:bg-red-500/5 transition-all">
+            <LogOut size={16} /> Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* ── Main ────────────────────────────────────────────────── */}
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen">
+        {/* Topbar */}
+        <header
+          className="flex items-center justify-between px-6 py-3.5 sticky top-0 z-20"
+          style={{ background: "rgba(7,7,7,0.96)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-white/50 hover:text-white p-1">
+              <Menu size={20} />
+            </button>
+            <div>
+              <h1 className="text-white font-bold text-base">
+                {NAV.find(n => isActive(n.path))?.label || "My Dashboard"}
+              </h1>
+              <p className="text-white/30 text-xs hidden sm:block">Tanzora Export Portal</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link to="/user/notifications" className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all">
+              <Bell size={18} />
+            </Link>
+            <Link to="/user/settings" className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all">
+              <User size={18} />
+            </Link>
+          </div>
+        </header>
+
+        <main className="flex-1 p-6 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+
+// Wrap with UserRoute guard
+export function UserDashboard() {
+  return (
+    <UserRoute>
+      <UserDashboardInner />
+    </UserRoute>
+  );
+}

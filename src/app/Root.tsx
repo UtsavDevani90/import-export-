@@ -3,8 +3,8 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 
-const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"];
-const DASH_ROUTES = ["/dashboard"];
+const AUTH_ROUTES = ["/login", "/signup", "/register", "/forgot-password", "/admin/login"];
+const DASH_ROUTES = ["/dashboard", "/admin", "/user"];
 
 export function Root() {
   const location = useLocation();

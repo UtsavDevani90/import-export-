@@ -1,5 +1,6 @@
 // middleware/authMiddleware.js — JWT authentication & role guard (PostgreSQL)
 // Attach this to any route that requires a logged-in admin.
+// Cookie name: admin_token (separate from user_token used by portal users)
 //
 // Usage:
 //   router.get('/admin-only', protect, adminOnly, handler);
@@ -13,11 +14,11 @@ const protect = async (req, res, next) => {
   try {
     let token;
 
-    // Accept token from Authorization header OR from cookie
+    // Accept token from Authorization header OR from admin_token cookie
     if (req.headers.authorization?.startsWith('Bearer ')) {
       token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies?.token) {
-      token = req.cookies.token;
+    } else if (req.cookies?.admin_token) {
+      token = req.cookies.admin_token;
     }
 
     if (!token) {
@@ -26,6 +27,11 @@ const protect = async (req, res, next) => {
 
     // Verify signature and expiry
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Block user tokens from accessing admin routes
+    if (decoded.type === 'user') {
+      return sendError(res, 403, 'Access denied — admin account required');
+    }
 
     // Fetch fresh admin from PostgreSQL (catches disabled/deleted accounts)
     const admin = await Admin.findById(decoded.id);

@@ -209,5 +209,69 @@ export const inquiryNoteService = {
   addNote:   (inquiryId, note) => api.post(`/inquiries/${inquiryId}/notes`, { note }),
 };
 
+// ════════════════════════════════════════════════════════════
+//  USER AUTH SERVICE (Portal users)
+// ════════════════════════════════════════════════════════════
+export const userAuthService = {
+  register:        (data)                 => api.post('/users/auth/register', data),
+  login:           (email, password)      => api.post('/users/auth/login', { email, password }),
+  logout:          ()                     => api.post('/users/auth/logout'),
+  getMe:           ()                     => api.get('/users/auth/me'),
+  changePassword:  (data)                 => api.put('/users/auth/change-password', data),
+};
+
+// ════════════════════════════════════════════════════════════
+//  USER PROFILE SERVICE
+// ════════════════════════════════════════════════════════════
+export const userProfileService = {
+  get:    ()     => api.get('/users/profile'),
+  update: (data) => api.put('/users/profile', data),
+};
+
+// ════════════════════════════════════════════════════════════
+//  USER INQUIRY SERVICE
+// ════════════════════════════════════════════════════════════
+export const userInquiryService = {
+  getAll: (params) => api.get('/users/inquiries', { params }),
+  submit: (data)   => api.post('/users/inquiries', data),
+};
+
+// ════════════════════════════════════════════════════════════
+//  USER QUOTATION SERVICE
+// ════════════════════════════════════════════════════════════
+export const userQuotationService = {
+  getAll:  (params) => api.get('/users/quotations', { params }),
+  getById: (id)     => api.get(`/users/quotations/${id}`),
+};
+
+// ════════════════════════════════════════════════════════════
+//  USER FAVORITES SERVICE
+// ════════════════════════════════════════════════════════════
+export const userFavoriteService = {
+  getAll:  ()          => api.get('/users/favorites'),
+  toggle:  (productId) => api.post(`/users/favorites/${productId}`),
+  remove:  (productId) => api.delete(`/users/favorites/${productId}`),
+};
+
+// ════════════════════════════════════════════════════════════
+//  USER NOTIFICATIONS SERVICE
+// ════════════════════════════════════════════════════════════
+export const userNotificationService = {
+  getAll:      (params) => api.get('/users/notifications', { params }),
+  markRead:    (id)     => api.patch(`/users/notifications/${id}/read`),
+  markAllRead: ()       => api.patch('/users/notifications/read-all'),
+};
+
+// ════════════════════════════════════════════════════════════
+//  ADMIN USER MANAGEMENT SERVICE
+// ════════════════════════════════════════════════════════════
+export const adminUserService = {
+  getAll:       (params)             => api.get('/admin/users', { params }),
+  getById:      (id)                 => api.get(`/admin/users/${id}`),
+  updateStatus: (id, is_active)      => api.patch(`/admin/users/${id}/status`, { is_active }),
+  notify:       (id, data)           => api.post(`/admin/users/${id}/notify`, data),
+  delete:       (id)                 => api.delete(`/admin/users/${id}`),
+};
+
 export default api;
 
