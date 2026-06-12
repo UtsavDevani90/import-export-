@@ -30,10 +30,10 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const ADMINS = [
   {
     name:     'Utsav Devani',
-    email:    'utsav@tanzoraexport.com',
-    password: 'Admin@1234',      // ← CHANGE THIS before running
+   email: 'utsavdevani90@gmail.com',
+   password: 'TanzoraAdmin123',      // ← CHANGE THIS before running
     role:     'superadmin',
-  },
+  }, 
   {
     name:     'Arjun Bhavani',
     email:    'arjun@tanzoraexport.com',
