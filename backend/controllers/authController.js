@@ -159,6 +159,7 @@ const changePassword = async (req, res, next) => {
 
     return sendSuccess(res, 200, 'Password changed successfully');
   } catch (err) {
+    console.error('LOGIN ERROR:', err);
     next(err);
   }
 };

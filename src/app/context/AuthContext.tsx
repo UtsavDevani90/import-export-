@@ -54,8 +54,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       store.setItem('tanzora_user', JSON.stringify(u));
       setIsLoading(false);
       return true;
-    } catch {
+    } catch (err: unknown) {
       setIsLoading(false);
+      // Extract the actual server error message for debugging
+      const axiosErr = err as { response?: { status?: number; data?: { message?: string } }; message?: string };
+      const serverMsg = axiosErr?.response?.data?.message;
+      const httpStatus = axiosErr?.response?.status;
+      const networkMsg = axiosErr?.message;
+      console.error('[AuthContext login] FAILED:', { httpStatus, serverMsg, networkMsg });
       return false;
     }
   };
