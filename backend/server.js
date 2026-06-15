@@ -20,6 +20,7 @@ const fs           = require('fs');
 const { connectDB } = require('./config/db');
 const logger        = require('./utils/logger');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { initializeDatabase } = require('./utils/initializeDB');
 
 // ── Route imports ─────────────────────────────────────────────
 const authRoutes        = require('./routes/authRoutes');
@@ -187,6 +188,11 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   logger.info(`🚀  Tanzora Export API running on port ${PORT} [${process.env.NODE_ENV}]`);
   logger.info(`📡  Health: http://localhost:${PORT}/api/health`);
+  
+  // Auto-initialize database (seed admins, run migrations, etc.)
+  initializeDatabase().catch((err) => {
+    logger.error(`Database initialization error: ${err.message}`);
+  });
 });
 
 // ── Graceful shutdown ─────────────────────────────────────────
