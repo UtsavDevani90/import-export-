@@ -440,7 +440,7 @@ export function Contact() {
           <h2 className="text-stone-900 font-bold text-xl mb-6 text-center">
             Our Offices
             </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 justify-items-center">
+            <div className="flex justify-center">
             {[
               {
                 type: "Head Office & Factory",
