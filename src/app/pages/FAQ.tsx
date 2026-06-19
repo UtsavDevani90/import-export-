@@ -36,7 +36,7 @@ const faqs: FAQItem[] = [
   {
     category: 'Payment & Pricing',
     question: 'Do you provide samples?',
-    answer: 'Yes, we provide free samples up to 500g. Courier charges are borne by the buyer. For larger sample quantities, nominal charges apply.'
+    answer: 'Yes, we provide free samples up to 1kg. Courier charges are borne by the buyer. For larger sample quantities, nominal charges apply.'
   },
   {
     category: 'Payment & Pricing',
@@ -46,7 +46,7 @@ const faqs: FAQItem[] = [
   {
     category: 'Quality & Certification',
     question: 'What quality certifications do you have?',
-    answer: 'We hold ISO 22000:2018, FSSAI, APEDA, HACCP, Spice Board India, MSME, IEC, GST, and Kosher certifications ensuring international quality standards.'
+    answer: 'We hold FSSAI, Spice Board India, MSME, IEC, GST, and Kosher certifications ensuring international quality standards.'
   },
   {
     category: 'Quality & Certification',
