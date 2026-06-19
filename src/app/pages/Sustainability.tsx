@@ -5,7 +5,7 @@ const initiatives = [
   {
     icon: Leaf,
     title: 'Organic Farming Support',
-    description: 'Partner with 200+ organic farmers. Promote chemical-free cultivation and sustainable agriculture practices.',
+    description: 'Partner with organic farmers. Promote chemical-free cultivation and sustainable agriculture practices.',
     impact: '30% of sourcing from organic farms'
   },
   {
@@ -18,25 +18,25 @@ const initiatives = [
     icon: Recycle,
     title: 'Waste Management',
     description: 'Zero-waste facility with 95% waste recycling. Organic waste converted to compost for farming.',
-    impact: '100 tons waste recycled yearly'
+    impact: 'waste recycled yearly'
   },
   {
     icon: Sun,
     title: 'Solar Energy',
     description: '500 KW solar plant powers 60% of facility operations. Reduced carbon footprint significantly.',
-    impact: '300 tons CO₂ reduction per year'
+    impact: 'CO₂ reduction per year'
   },
   {
     icon: Users,
     title: 'Fair Trade Practices',
     description: 'Direct farmer partnerships ensuring fair prices. Support rural communities and women empowerment.',
-    impact: '500+ farming families supported'
+    impact: 'farming families supported'
   },
   {
     icon: Award,
     title: 'Sustainable Packaging',
     description: 'Biodegradable and recyclable packaging materials. Reduced plastic usage by 70% since 2020.',
-    impact: '50 tons plastic eliminated'
+    impact: 'plastic eliminated'
   }
 ];
 
