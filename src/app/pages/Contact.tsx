@@ -406,7 +406,7 @@ export function Contact() {
           <div className="rounded-2xl overflow-hidden shadow-xl border border-amber-100 h-80">
             <iframe
               title="Tanzora Export Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14692.17703068748!2d72.3869963!3d23.8051048!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2aa96c4d65bd%3A0xa0a7a8d0c63e86f5!2sUnjha%2C%20Gujarat%20384170!5e0!3m2!1sen!2sin!4v1715000000000!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14692.17703068748!2d72.3869963!3d23.8051048..."
               width="100%"
               height="100%"
               style={{ border: 0 }}
