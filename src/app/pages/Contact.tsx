@@ -437,7 +437,9 @@ export function Contact() {
       {/* ── Branch Offices ── */}
       <section className="py-12 px-4 bg-amber-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-stone-900 font-bold text-xl mb-6">Our Offices</h2>
+          <h2 className="text-stone-900 font-bold text-xl mb-6 text-center">
+            Our Offices
+            </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
               {
