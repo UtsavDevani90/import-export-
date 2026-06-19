@@ -7,42 +7,42 @@ const industries = [
     icon: Store,
     title: 'Retail & Supermarkets',
     description: 'Supply premium packaged spices to retail chains and supermarkets worldwide',
-    clients: ['Walmart', 'Carrefour', 'Tesco', 'Metro Cash & Carry'],
+    clients: ['Supermarket Chains', 'Grocery Retailers', 'Importers & Distributors'],
     products: ['Consumer packs', 'Private labels', 'Branded spices', 'Gift sets']
   },
   {
     icon: Utensils,
     title: 'Food Processing',
     description: 'Bulk spices for food manufacturers, ready-to-eat meals, and seasoning companies',
-    clients: ['Nestle', 'Unilever', 'McCain', 'Heinz'],
+    clients: ['Food Manufacturers', 'Seasoning Companies', 'Spice Blenders'],
     products: ['Bulk powder spices', 'Custom blends', 'Oleoresins', 'Spice extracts']
   },
   {
     icon: Building2,
     title: 'Hotels & Restaurants',
     description: 'Premium quality spices for hospitality industry and restaurant chains',
-    clients: ['Marriott', 'Hilton', 'McDonald\'s', 'KFC'],
+    clients: ['Hotel Chains', 'Restaurant Groups', 'Catering Services'],
     products: ['Whole spices', 'Ground spices', 'Spice mixes', 'Bulk packaging']
   },
   {
     icon: ShoppingBag,
     title: 'Wholesale Distributors',
     description: 'Partner with distributors and importers for regional market supply',
-    clients: ['Regional importers', 'Cash & carry', 'Wholesale markets', 'Trading companies'],
+    clients: ['Regional importers', 'Trading Companies', 'Bulk Buyers'],
     products: ['Bulk quantities', 'Multiple varieties', 'Flexible packaging', 'Competitive pricing']
   },
   {
     icon: Factory,
     title: 'Pharmaceutical & Nutraceuticals',
     description: 'High-purity spices for medicinal and health supplement industries',
-    clients: ['Pharma companies', 'Ayurvedic manufacturers', 'Supplement brands', 'Herbal products'],
+    clients: ['Spice Blenders', 'Seasoning Producers', 'Ready-to-Eat Brands'],
     products: ['Turmeric extract', 'Ginger powder', 'Black pepper', 'Curcumin']
   },
   {
     icon: Plane,
     title: 'Export Trading Houses',
     description: 'Reliable supply partner for export trading companies and re-exporters',
-    clients: ['Trading houses', 'Export companies', 'Re-exporters', 'Commodity traders'],
+    clients: ['Trading houses', 'Export companies', 'Re-exporters'],
     products: ['Containerized loads', 'Mixed containers', 'Documentation support', 'Quality assurance']
   }
 ];
