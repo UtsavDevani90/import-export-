@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Globe, MapPin, Ship, Plane, TrendingUp } from 'lucide-react';
+import { useStats } from '../hooks/useStats';
 
 interface Country {
   name: string;
@@ -59,6 +60,11 @@ export function GlobalPresenceSection() {
   const [activeRegion, setActiveRegion] = useState<string>('all');
   const [hoveredCountry, setHoveredCountry] = useState<Country | null>(null);
   const [animatedRoutes, setAnimatedRoutes] = useState<boolean>(false);
+  const { stats, loading } = useStats();
+
+  // Default values fallback
+  const statsCountries = stats.countries || `${exportCountries.length}+`;
+  const statsMtExported = stats.products || '5000+';
 
   useEffect(() => {
     setAnimatedRoutes(true);
@@ -80,7 +86,7 @@ export function GlobalPresenceSection() {
           <div className="text-blue-600 mb-2">
             <Globe size={28} />
           </div>
-          <div className="text-blue-900 font-bold text-3xl mb-1">{exportCountries.length}+</div>
+          <div className="text-blue-900 font-bold text-3xl mb-1">{loading ? '...' : statsCountries}</div>
           <div className="text-blue-700 text-sm font-medium">Export Countries</div>
         </div>
         <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-green-200">
@@ -94,7 +100,7 @@ export function GlobalPresenceSection() {
           <div className="text-amber-600 mb-2">
             <Ship size={28} />
           </div>
-          <div className="text-amber-900 font-bold text-3xl mb-1">5000+</div>
+          <div className="text-amber-900 font-bold text-3xl mb-1">{loading ? '...' : statsMtExported}</div>
           <div className="text-amber-700 text-sm font-medium">MT Exported</div>
         </div>
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200">

@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2, Users, Award, Globe, Factory, Target, Eye, He
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { CertificatesShowcase } from "../components/CertificatesShowcase";
 import { CertificateSection } from "../components/CertificateSection";
+import { useStats } from "../hooks/useStats";
 
 const marketImage =
   "https://images.unsplash.com/photo-1775433205046-86e060feff06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBzcGljZSUyMG1hcmtldCUyMHZpYnJhbnQlMjBjb2xvcmZ1bCUyMGJhemFhcnxlbnwxfHx8fDE3Nzg1NzQ5MDh8MA&ixlib=rb-4.1.0&q=80&w=1080";
@@ -95,6 +96,12 @@ const whyChooseUs = [
 ];
 
 export function About() {
+  const { stats, loading } = useStats();
+
+  // Default values fallback
+  const clients = stats.clients || '500+';
+  const countries = stats.countries || '50+';
+
   return (
     <div className="min-h-screen">
       {/* ── Page Header ── */}
@@ -146,11 +153,11 @@ export function About() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">500+</div>
+                  <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : clients}</div>
                   <div className="text-stone-600 text-xs">Happy Global Clients</div>
                 </div>
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">50+</div>
+                  <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : countries}</div>
                   <div className="text-stone-600 text-xs">Export Countries</div>
                 </div>
                 <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
@@ -261,11 +268,11 @@ export function About() {
 
             <div className="grid grid-cols-2 gap-5 mb-7">
               <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                <div className="text-amber-600 font-bold text-2xl mb-1">500+</div>
+                <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : clients}</div>
                 <div className="text-stone-600 text-xs">Happy Global Clients</div>
               </div>
               <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                <div className="text-amber-600 font-bold text-2xl mb-1">50+</div>
+                <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : countries}</div>
                 <div className="text-stone-600 text-xs">Export Countries</div>
               </div>
               <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">

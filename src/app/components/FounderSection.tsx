@@ -1,6 +1,14 @@
 import { Quote, Award, TrendingUp, Users } from 'lucide-react';
+import { useStats } from '../hooks/useStats';
 
 export function FounderSection() {
+  const { stats, loading, error } = useStats();
+
+  // Default values fallback
+  const yearsExp = stats.years || '30+';
+  const countries = stats.countries || '50+';
+  const clients = stats.clients || '500+';
+
   return (
     <div className="grid lg:grid-cols-2 gap-12 items-center">
       {/* Founder Image & Stats */}
@@ -21,15 +29,15 @@ export function FounderSection() {
         {/* Floating Stats */}
         <div className="absolute -bottom-6 left-6 right-6 grid grid-cols-3 gap-3">
           <div className="bg-white rounded-xl p-3 shadow-xl border border-amber-100 text-center">
-            <div className="text-amber-600 font-bold text-xl">30+</div>
+            <div className="text-amber-600 font-bold text-xl">{loading ? '...' : yearsExp}</div>
             <div className="text-stone-600 text-xs">Years Exp.</div>
           </div>
           <div className="bg-white rounded-xl p-3 shadow-xl border border-amber-100 text-center">
-            <div className="text-amber-600 font-bold text-xl">50+</div>
+            <div className="text-amber-600 font-bold text-xl">{loading ? '...' : countries}</div>
             <div className="text-stone-600 text-xs">Countries</div>
           </div>
           <div className="bg-white rounded-xl p-3 shadow-xl border border-amber-100 text-center">
-            <div className="text-amber-600 font-bold text-xl">500+</div>
+            <div className="text-amber-600 font-bold text-xl">{loading ? '...' : clients}</div>
             <div className="text-stone-600 text-xs">Clients</div>
           </div>
         </div>

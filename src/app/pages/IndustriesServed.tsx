@@ -1,5 +1,6 @@
 import React from 'react';
 import { Store, Utensils, Building2, ShoppingBag, Factory, Plane } from 'lucide-react';
+import { useStats } from '../hooks/useStats';
 
 const industries = [
   {
@@ -54,6 +55,15 @@ const stats = [
 ];
 
 export default function IndustriesServed() {
+  const { stats: statsData, loading } = useStats();
+
+  const stats = [
+    { value: statsData.clients || '500+', label: 'Active Clients' },
+    { value: statsData.countries || '24+', label: 'Countries Served' },
+    { value: '6', label: 'Industry Verticals' },
+    { value: statsData.years || '15+', label: 'Years Experience' }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -75,7 +85,7 @@ export default function IndustriesServed() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-4xl font-bold text-emerald-800 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  {stat.value}
+                  {loading && (stat.label === 'Active Clients' || stat.label === 'Countries Served' || stat.label === 'Years Experience') ? '...' : stat.value}
                 </div>
                 <div className="text-gray-600" style={{ fontFamily: 'Inter, sans-serif' }}>
                   {stat.label}

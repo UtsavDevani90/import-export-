@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff, LogIn, ArrowRight, Mail, Lock } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useStats } from "../hooks/useStats";
 
 const SPICE_BG = "https://images.unsplash.com/photo-1768729341078-9da4e0ea959e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080&q=80";
 
@@ -13,7 +14,14 @@ export function Login() {
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState("");
   const { userLogin } = useAuth();
+  const { stats: statsData, loading: statsLoading } = useStats();
   const navigate = useNavigate();
+
+  // Dynamic stats with fallback
+  const clients = statsData.clients || '500+';
+  const countries = statsData.countries || '50+';
+  const years = statsData.years || '19+';
+  const statsValues = [clients, countries, years];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +41,7 @@ export function Login() {
         <div className="absolute inset-0 flex flex-col justify-end p-12">
           <div className="inline-flex items-center gap-2 bg-[#d4a017]/20 border border-[#d4a017]/30 text-[#d4a017] text-xs px-3 py-1.5 rounded-full mb-4 w-fit">
             <span className="w-2 h-2 rounded-full bg-[#d4a017] animate-pulse"/>
-            Trusted by 500+ Global Importers
+            Trusted by {statsLoading ? '...' : clients} Global Importers
           </div>
           <h2 className="text-white text-4xl font-bold mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
             Access Your<br/><span className="text-[#d4a017]">Export Portal</span>
@@ -42,9 +50,9 @@ export function Login() {
             Manage inquiries, download certificates, track shipments, and access exclusive B2B pricing.
           </p>
           <div className="flex gap-4 mt-8">
-            {["500+", "50+", "19+"].map((v, i) => (
+            {statsValues.map((v, i) => (
               <div key={i} className="text-center">
-                <div className="text-[#d4a017] font-bold text-xl">{v}</div>
+                <div className="text-[#d4a017] font-bold text-xl">{statsLoading ? '...' : v}</div>
                 <div className="text-white/40 text-xs">{["Clients","Countries","Years"][i]}</div>
               </div>
             ))}

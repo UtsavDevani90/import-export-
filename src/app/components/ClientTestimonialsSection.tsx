@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Star, Quote, Play, MapPin, Building2, User, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { useStats } from '../hooks/useStats';
 
 interface Testimonial {
   id: number;
@@ -161,6 +162,11 @@ const clientLogos = [
 export function ClientTestimonialsSection() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [selectedVideo, setSelectedVideo] = useState<VideoTestimonial | null>(null);
+  const { stats, loading } = useStats();
+
+  // Default values fallback
+  const clients = stats.clients || '500+';
+  const countries = stats.countries || '50+';
 
   const nextTestimonial = () => {
     setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
@@ -397,7 +403,7 @@ export function ClientTestimonialsSection() {
       <div className="bg-gradient-to-r from-amber-600 to-amber-500 rounded-2xl p-8 text-center">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
-            <div className="text-white text-4xl font-bold mb-2">500+</div>
+            <div className="text-white text-4xl font-bold mb-2">{loading ? '...' : clients}</div>
             <div className="text-amber-100 text-sm">Happy Clients</div>
           </div>
           <div>
@@ -409,7 +415,7 @@ export function ClientTestimonialsSection() {
             <div className="text-amber-100 text-sm">Retention Rate</div>
           </div>
           <div>
-            <div className="text-white text-4xl font-bold mb-2">50+</div>
+            <div className="text-white text-4xl font-bold mb-2">{loading ? '...' : countries}</div>
             <div className="text-amber-100 text-sm">Countries</div>
           </div>
         </div>
