@@ -422,7 +422,7 @@ export function Contact() {
             </div>
             <div className="flex items-center gap-1.5 ml-auto">
               <a
-                href="https://maps.google.com/?q=Unjha+Gujarat+India"
+                href="https://maps.google.com/?q=Amreli+Gujarat+India"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-amber-600 hover:text-amber-700 font-medium text-xs underline"
