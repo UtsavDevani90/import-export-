@@ -47,11 +47,11 @@ const industries = [
   }
 ];
 
-const stats = [
-  { value: '500+', label: 'Active Clients' },
-  { value: '24+', label: 'Countries Served' },
-  { value: '6', label: 'Industry Verticals' },
-  { value: '15+', label: 'Years Experience' }
+const stats_template = [
+  { label: 'Active Clients', key: 'clients' },
+  { label: 'Countries Served', key: 'countries' },
+  { label: 'Industry Verticals', value: '6' },
+  { label: 'Years Experience', key: 'years' }
 ];
 
 export default function IndustriesServed() {
@@ -59,9 +59,9 @@ export default function IndustriesServed() {
 
   const stats = [
     { value: statsData.clients || '500+', label: 'Active Clients' },
-    { value: statsData.countries || '24+', label: 'Countries Served' },
+    { value: statsData.countries || '50+', label: 'Countries Served' },
     { value: '6', label: 'Industry Verticals' },
-    { value: statsData.years || '15+', label: 'Years Experience' }
+    { value: statsData.years || '30+', label: 'Years Experience' }
   ];
 
   return (
