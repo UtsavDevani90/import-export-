@@ -41,7 +41,7 @@ const initiatives = [
 ];
 
 const certifications = [
-  'ISO 14001 Environmental Management',
+  'ISO 1001 Environmental Management',
   'Organic Certification (NPOP)',
   'Fair Trade Certified',
   'Carbon Neutral Initiative',
@@ -49,8 +49,7 @@ const certifications = [
 ];
 
 const goals = [
-  { year: '2024', goal: '100% renewable energy', status: 'In Progress' },
-  { year: '2025', goal: 'Zero plastic packaging', status: 'Planned' },
+  
   { year: '2026', goal: 'Carbon neutral operations', status: 'Planned' },
   { year: '2027', goal: '50% organic product range', status: 'Planned' }
 ];
@@ -139,7 +138,7 @@ export default function Sustainability() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex justify-center gap-6 flex-wrap">
           {goals.map((goal, index) => (
             <div key={index} className="bg-white rounded-xl border-2 border-gray-200 p-6 text-center hover:border-emerald-600 hover:shadow-lg transition-all">
               <div className="text-3xl font-bold text-emerald-800 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
