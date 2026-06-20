@@ -40,13 +40,7 @@ const initiatives = [
   }
 ];
 
-const certifications = [
-  'ISO 1001 Environmental Management',
-  'Organic Certification (NPOP)',
-  'Fair Trade Certified',
-  'Carbon Neutral Initiative',
-  'Green Business Certification'
-];
+
 
 const goals = [
   
