@@ -220,15 +220,6 @@ export function Home() {
                 className="w-full h-80 object-cover"
               />
             </div>
-            <div className="absolute -bottom-5 -right-5 bg-amber-500 rounded-2xl p-5 shadow-xl text-white">
-              <div className="font-bold text-3xl">19+</div>
-              <div className="text-amber-100 text-sm">Years of Excellence</div>
-            </div>
-            <div className="absolute -top-5 -left-5 bg-stone-900 rounded-2xl p-4 shadow-xl text-white">
-              <Award size={32} className="text-amber-400 mb-1" />
-              <div className="text-amber-400 font-bold text-sm">ISO 22000</div>
-              <div className="text-stone-400 text-xs">Certified</div>
-            </div>
           </div>
 
           <div>
