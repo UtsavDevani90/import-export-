@@ -104,109 +104,9 @@ export function About() {
 
   return (
     <div className="min-h-screen">
-      {/* ── Page Header ── */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wide mb-3">
-              Our Story
-            </div>
-            <h2 className="text-stone-900 font-bold text-3xl lg:text-4xl mb-4">
-              The Journey of <span className="text-amber-600">Tanzora Export</span>
-            </h2>
-            <p className="text-stone-600 max-w-3xl mx-auto text-sm leading-relaxed">
-              From a small trading firm in Amreli, Gujarat to a globally recognized spice exporter
-              serving 50+ countries — our story is built on trust, quality, and unwavering
-              commitment to excellence.
-            </p>
-          </div>
+      
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <ImageWithFallback
-                src={warehouseImage}
-                alt="Our Facility"
-                className="w-full h-80 object-cover rounded-2xl shadow-2xl"
-              />
-              <div className="absolute -bottom-4 -right-4 bg-amber-600 text-white rounded-2xl p-5 shadow-xl">
-                <Factory size={28} className="mb-1" />
-                <div className="font-bold">50,000 sq.ft.</div>
-                <div className="text-amber-100 text-xs">Processing Facility</div>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-stone-900 font-bold text-2xl mb-4">
-                Rooted in Tradition, Driven by Innovation
-              </h3>
-              <p className="text-stone-600 mb-4 leading-relaxed text-sm">
-                Tanzora Export is headquartered in Amreli, Gujarat —
-                We combine traditional spice knowledge passed down through
-                generations with modern processing technology to deliver premium quality products
-                to international buyers.
-              </p>
-              <p className="text-stone-600 mb-6 leading-relaxed text-sm">
-                Our operations span the entire value chain: direct farmer partnerships across
-                multiple states, a state-of-the-art processing plant, an in-house quality
-                laboratory, and a dedicated export team handling all international trade
-                requirements with precision and care.
-              </p>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : clients}</div>
-                  <div className="text-stone-600 text-xs">Happy Global Clients</div>
-                </div>
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">{loading ? '...' : countries}</div>
-                  <div className="text-stone-600 text-xs">Export Countries</div>
-                </div>
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">5000+</div>
-                  <div className="text-stone-600 text-xs">MT Annual Export</div>
-                </div>
-                <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
-                  <div className="text-amber-600 font-bold text-2xl mb-1">6+</div>
-                  <div className="text-stone-600 text-xs">Quality Certifications</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Founder Section ── */}
-      <section className="py-20 px-4 bg-gradient-to-br from-amber-50 to-stone-50">
-        <div className="max-w-7xl mx-auto">
-          {/* Leadership Team - 2 Co-founders */}
-          <div className="text-center mb-12">
-            <div className="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wide mb-3">
-              Leadership
-            </div>
-            <h2 className="text-stone-900 font-bold text-3xl lg:text-4xl mb-4">
-              Meet the <span className="text-amber-600">Founders</span>
-            </h2>
-            <p className="text-stone-600 max-w-2xl mx-auto text-sm leading-relaxed">
-              The vision and drive behind Tanzora Export — two co-founders united by a shared passion
-              for quality, integrity, and bringing India's finest spices to the world.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-xl transition-all border border-amber-100 group"
-              >
-                <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-amber-700 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-5 shadow-lg group-hover:shadow-amber-200 transition-shadow">
-                  {member.initial}
-                </div>
-                <h3 className="text-stone-900 font-bold text-xl mb-1">{member.name}</h3>
-                <div className="text-amber-600 text-sm font-semibold mb-4">{member.role}</div>
-                <p className="text-stone-500 text-sm leading-relaxed">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
       <div className="relative bg-stone-900 py-20 px-4 overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
@@ -472,14 +372,6 @@ export function About() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="text-amber-500 mt-0.5 shrink-0" />
-                  DP (Documents against Payment)
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={16} className="text-amber-500 mt-0.5 shrink-0" />
-                  DA (Documents against Acceptance)
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 size={16} className="text-amber-500 mt-0.5 shrink-0" />
                   Flexible Terms for Repeat Buyers
                 </li>
               </ul>
@@ -500,20 +392,13 @@ export function About() {
             </h2>
             <p className="text-stone-600 max-w-2xl mx-auto text-sm leading-relaxed mb-6">
               We hold all necessary certifications and registrations required for international
-              spice export. Click on any certificate to view details and download official documents.
+              spice export. 
             </p>
           </div>
 
           <CertificateSection />
 
-          <div className="text-center mt-10">
-            <Link
-              to="/certificates"
-              className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-7 py-3.5 rounded-xl font-medium text-sm transition-colors"
-            >
-              View All Certificates <ArrowRight size={16} />
-            </Link>
-          </div>
+          
         </div>
       </section>
 

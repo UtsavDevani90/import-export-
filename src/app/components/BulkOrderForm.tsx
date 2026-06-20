@@ -372,8 +372,6 @@ export function BulkOrderForm() {
               <option value="">Select payment terms</option>
               <option>T/T (Bank Transfer)</option>
               <option>L/C at Sight</option>
-              <option>DP (Documents against Payment)</option>
-              <option>DA (Documents against Acceptance)</option>
               <option>30% Advance + 70% Against Documents</option>
             </select>
           </div>

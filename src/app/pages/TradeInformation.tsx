@@ -105,18 +105,7 @@ const paymentTerms = [
     typical: 'Payment upon presentation of documents',
     icon: '📄',
   },
-  {
-    term: 'DP (Documents against Payment)',
-    description: 'Documents released upon payment',
-    typical: '100% payment before document release',
-    icon: '💰',
-  },
-  {
-    term: 'DA (Documents against Acceptance)',
-    description: 'Documents released upon acceptance of draft',
-    typical: 'Payment within agreed credit period',
-    icon: '✍️',
-  },
+  
 ];
 
 const incoterms = [
