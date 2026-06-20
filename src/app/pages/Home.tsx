@@ -157,7 +157,7 @@ export function Home() {
             </h1>
             <p className="text-stone-300 text-base sm:text-lg mb-4 sm:mb-5 leading-relaxed animate-fade-up delay-200">
               Authentic, farm-fresh spices exported to 50+ countries.
-              ISO 22000 certified. APEDA registered.
+              I
             </p>
             <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-stone-300 mb-6 sm:mb-8">
               {["Turmeric", "Chilli", "Black Pepper", "Cumin", "Coriander", "Cinnamon"].map(
