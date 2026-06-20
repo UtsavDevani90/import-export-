@@ -40,6 +40,8 @@ const adminRoutes       = require('./routes/adminRoutes');
 const userAuthRoutes    = require('./routes/userAuthRoutes');
 const userRoutes        = require('./routes/userRoutes');
 const adminUserRoutes   = require('./routes/adminUserRoutes');
+// ── Google OAuth (public — NO auth middleware) ────────────────────────
+const googleAuthRoutes  = require('./routes/googleAuthRoutes');
 
 // ── Connect to PostgreSQL ─────────────────────────────────────
 connectDB();
@@ -161,8 +163,13 @@ app.use('/api/cms',           cmsRoutes);
 app.use('/api/settings',      settingsRoutes);
 app.use('/api/activity-logs', activityLogRoutes);
 app.use('/api/admins',        adminRoutes);
-// ── User portal routes ───────────────────────────────────────────────
+// ── Google OAuth routes — mounted FIRST, completely public, no auth middleware ──
+// IMPORTANT: This MUST come before /api/users/auth and /api/users so that
+// userProtect can never intercept the OAuth redirect/callback flow.
+app.use('/api/users/auth',    googleAuthRoutes);  // /api/users/auth/google & /callback
+// ── User portal auth routes (login, register, me, etc.) ─────────────────────
 app.use('/api/users/auth',    userAuthRoutes);
+// ── User portal protected routes ─────────────────────────────────────────────
 app.use('/api/users',         userRoutes);
 app.use('/api/admin/users',   adminUserRoutes);
 

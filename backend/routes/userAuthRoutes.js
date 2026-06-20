@@ -1,46 +1,29 @@
 // routes/userAuthRoutes.js — /api/users/auth/*
-const express    = require('express');
-const router     = express.Router();
-const passport   = require('passport');
+// ─────────────────────────────────────────────────────────────────────────
+// NOTE: Google OAuth routes (/google and /google/callback) are intentionally
+// NOT here. They live in googleAuthRoutes.js which is mounted separately in
+// server.js to guarantee they are never touched by auth middleware.
+// ─────────────────────────────────────────────────────────────────────────
+const express = require('express');
+const router  = express.Router();
 const {
   register, login, getMe, changePassword, logout,
 } = require('../controllers/userAuthController');
-const { googleCallback, googleAuthError } = require('../controllers/googleAuthController');
 const { userProtect } = require('../middleware/userMiddleware');
 
-// POST /api/users/auth/register
+// POST /api/users/auth/register  — public
 router.post('/register', register);
 
-// POST /api/users/auth/login
+// POST /api/users/auth/login     — public
 router.post('/login', login);
 
-// GET  /api/users/auth/me
+// GET  /api/users/auth/me        — protected
 router.get('/me', userProtect, getMe);
 
-// PUT  /api/users/auth/change-password
+// PUT  /api/users/auth/change-password — protected
 router.put('/change-password', userProtect, changePassword);
 
-// POST /api/users/auth/logout
+// POST /api/users/auth/logout    — protected
 router.post('/logout', userProtect, logout);
-
-// ── Google OAuth ─────────────────────────────────────────────────────────
-// GET /api/users/auth/google — Start OAuth flow (redirect to Google consent)
-router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope:   ['profile', 'email'],
-    session: false,
-  })
-);
-
-// GET /api/users/auth/google/callback — Google redirects here after consent
-router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    session:      false,
-    failureRedirect: `${(process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '')}/login?error=google_failed`,
-  }),
-  googleCallback
-);
 
 module.exports = router;
