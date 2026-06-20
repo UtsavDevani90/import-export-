@@ -1,55 +1,6 @@
 import { Award, CheckCircle2, Shield, FileCheck, Globe2, Leaf } from 'lucide-react';
 
-const certificates = [
-  {
-    name: 'APEDA',
-    fullName: 'Agricultural & Processed Food Products Export Development Authority',
-    icon: Globe2,
-    color: 'from-green-500 to-green-600',
-    description: 'Registered exporter of agricultural products',
-    certNo: 'APEDA/2024/12345',
-  },
-  {
-    name: 'FSSAI',
-    fullName: 'Food Safety and Standards Authority of India',
-    icon: Shield,
-    color: 'from-blue-500 to-blue-600',
-    description: 'Food safety & hygiene compliance',
-    certNo: 'FSSAI-10012345678901',
-  },
-  {
-    name: 'IEC',
-    fullName: 'Import Export Code',
-    icon: FileCheck,
-    color: 'from-purple-500 to-purple-600',
-    description: 'Authorized for international trade',
-    certNo: 'IEC-0512345678',
-  },
-  {
-    name: 'GST',
-    fullName: 'Goods and Services Tax',
-    icon: CheckCircle2,
-    color: 'from-orange-500 to-orange-600',
-    description: 'GST registered business entity',
-    certNo: '24XXXXX1234X1ZX',
-  },
-  {
-    name: 'Spice Board India',
-    fullName: 'Ministry of Commerce & Industry, Govt. of India',
-    icon: Leaf,
-    color: 'from-amber-500 to-amber-600',
-    description: 'Registered spice exporter member',
-    certNo: 'SBI/EXP/2024/5678',
-  },
-  {
-    name: 'ISO 22000:2018',
-    fullName: 'Food Safety Management System',
-    icon: Award,
-    color: 'from-red-500 to-red-600',
-    description: 'International food safety standard',
-    certNo: 'ISO-22000-2024-IN-001',
-  },
-];
+const certificates = [];
 
 export function CertificatesShowcase() {
   return (

@@ -107,25 +107,7 @@ export function Certificates() {
         </div>
       </section>
 
-      {/* Main Certificates Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-stone-50 to-amber-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="inline-block bg-amber-100 text-amber-700 text-xs font-semibold px-3 py-1.5 rounded-full uppercase tracking-wide mb-3">
-              Official Certifications
-            </div>
-            <h2 className="text-stone-900 font-bold text-3xl lg:text-4xl mb-4">
-              Verified <span className="text-amber-600">Certificates</span>
-            </h2>
-            <p className="text-stone-600 max-w-2xl mx-auto text-sm leading-relaxed">
-              Click on any certificate to view details, verify authenticity, and download official
-              PDF documents.
-            </p>
-          </div>
-
-          <CertificateSection />
-        </div>
-      </section>
+      
 
       {/* Quality Standards */}
       <section className="py-20 px-4 bg-white">
