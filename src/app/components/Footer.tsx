@@ -88,7 +88,11 @@ export function Footer() {
         {/* Brand Column */}
         <div>
           <div className="flex items-center gap-3 mb-5">
-            <TanzoraLogoMark size={40} />
+            <img
+            src="/logo.png"
+            alt="Tanzora Export"
+            className="w-10 h-10 object-contain"
+            />
             <div>
               <div
                 className="text-white font-bold text-base leading-none tracking-widest"
