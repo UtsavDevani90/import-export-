@@ -21,6 +21,7 @@ const { connectDB } = require('./config/db');
 const logger        = require('./utils/logger');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const { initializeDatabase } = require('./utils/initializeDB');
+const passport      = require('./config/passport'); // Google OAuth strategy
 
 // ── Route imports ─────────────────────────────────────────────
 const authRoutes        = require('./routes/authRoutes');
@@ -117,6 +118,9 @@ app.use(cookieParser());
 
 // Clean user input from XSS attacks
 app.use(xss());
+
+// Initialize Passport (no session — we use JWT cookies)
+app.use(passport.initialize());
 
 // ═══════════════════════════════════════════════════════════
 //  PHASE 3 — LOGGING

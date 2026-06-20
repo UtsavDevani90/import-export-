@@ -9,7 +9,7 @@ const bcrypt   = require('bcryptjs');
 const findByEmail = async (email, includePassword = false) => {
   const fields = includePassword
     ? '*'
-    : 'id, full_name, email, phone, company_name, country, role, is_active, email_verified, last_login, created_at, updated_at';
+    : 'id, full_name, email, phone, company_name, country, role, is_active, email_verified, last_login, google_id, avatar, created_at, updated_at';
   const { rows } = await pool.query(
     `SELECT ${fields} FROM users WHERE email = $1 LIMIT 1`,
     [email.toLowerCase().trim()]
@@ -21,10 +21,54 @@ const findByEmail = async (email, includePassword = false) => {
 const findById = async (id, includePassword = false) => {
   const fields = includePassword
     ? '*'
-    : 'id, full_name, email, phone, company_name, country, role, is_active, email_verified, last_login, created_at, updated_at';
+    : 'id, full_name, email, phone, company_name, country, role, is_active, email_verified, last_login, google_id, avatar, created_at, updated_at';
   const { rows } = await pool.query(
     `SELECT ${fields} FROM users WHERE id = $1 LIMIT 1`,
     [id]
+  );
+  return rows[0] || null;
+};
+
+// ── Find user by Google ID ─────────────────────────────────────────
+const findByGoogleId = async (googleId) => {
+  const { rows } = await pool.query(
+    `SELECT id, full_name, email, phone, company_name, country, role, is_active,
+            email_verified, last_login, google_id, avatar, created_at, updated_at
+     FROM users WHERE google_id = $1 LIMIT 1`,
+    [googleId]
+  );
+  return rows[0] || null;
+};
+
+// ── Create a Google-authenticated user (no password) ──────────────
+const createGoogleUser = async ({ full_name, email, google_id, avatar }) => {
+  const { rows } = await pool.query(
+    `INSERT INTO users (full_name, email, password_hash, google_id, avatar, email_verified)
+     VALUES ($1, $2, NULL, $3, $4, TRUE)
+     RETURNING id, full_name, email, phone, company_name, country, role, is_active,
+               email_verified, last_login, google_id, avatar, created_at, updated_at`,
+    [
+      full_name.trim(),
+      email.toLowerCase().trim(),
+      google_id,
+      avatar || null,
+    ]
+  );
+  return rows[0];
+};
+
+// ── Link a Google ID to an existing email/password account ────────
+const linkGoogleId = async (id, googleId, avatar) => {
+  const { rows } = await pool.query(
+    `UPDATE users
+     SET google_id      = $1,
+         avatar         = COALESCE($2, avatar),
+         email_verified = TRUE,
+         updated_at     = NOW()
+     WHERE id = $3
+     RETURNING id, full_name, email, phone, company_name, country, role, is_active,
+               email_verified, last_login, google_id, avatar, created_at, updated_at`,
+    [googleId, avatar || null, id]
   );
   return rows[0] || null;
 };
@@ -242,7 +286,10 @@ const createNotification = async ({ user_id, title, message, type = 'info', link
 module.exports = {
   findByEmail,
   findById,
+  findByGoogleId,
   create,
+  createGoogleUser,
+  linkGoogleId,
   updateLastLogin,
   updateProfile,
   updatePassword,

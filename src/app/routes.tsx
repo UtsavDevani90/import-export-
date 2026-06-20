@@ -24,6 +24,7 @@ import { Login }              from "./pages/Login";           // User login
 import { AdminLogin }         from "./pages/AdminLogin";      // Admin-only login
 import { Signup }             from "./pages/Signup";
 import { ForgotPassword }     from "./pages/ForgotPassword";
+import { GoogleAuthCallback } from "./pages/GoogleAuthCallback"; // Google OAuth callback
 
 // ── Admin dashboard ────────────────────────────────────────────────
 import { Dashboard }          from "./pages/Dashboard";       // Existing admin shell
@@ -78,6 +79,7 @@ export const router = createBrowserRouter([
       { path: "signup",           Component: Signup },         // Alias for compat
       { path: "forgot-password",  Component: ForgotPassword },
       { path: "admin/login",      Component: AdminLogin },     // Admin-only login
+      { path: "auth/google/callback", Component: GoogleAuthCallback }, // Google OAuth
 
       // ── Admin dashboard at /admin/* ────────────────────────────
       // Wrapped in AdminRoute guard inline via element

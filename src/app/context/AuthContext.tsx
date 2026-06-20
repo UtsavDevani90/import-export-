@@ -37,6 +37,8 @@ interface AuthCtx {
   userLogin:    (email: string, password: string, remember?: boolean) => Promise<{ ok: boolean; error?: string }>;
   userRegister: (data: UserRegisterData) => Promise<{ ok: boolean; error?: string }>;
   userLogout:   () => void;
+  // Google OAuth
+  googleLoginCallback: (token: string, userData: Record<string, unknown>) => void;
   // Shared
   logout:       () => void;
   setUser:      (u: AuthUser | null) => void;
@@ -188,6 +190,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try { axios.post(`${API_BASE}/users/auth/logout`, {}, { withCredentials: true }); } catch {}
   };
 
+  // ── Google OAuth callback ─────────────────────────────────
+  // Called by GoogleAuthCallback.tsx after reading token+user from URL params.
+  // Mirrors the storage logic of userLogin (always uses localStorage so
+  // the session survives a browser refresh after the redirect).
+  const googleLoginCallback = (token: string, userData: Record<string, unknown>) => {
+    const authUser: AuthUser = {
+      id:      userData.id as string,
+      name:    (userData.name || userData.full_name) as string,
+      email:   userData.email as string,
+      role:    'user',
+      phone:   userData.phone as string | undefined,
+      company: userData.company as string | undefined,
+      country: userData.country as string | undefined,
+    };
+    setUser(authUser);
+    setToken(token);
+    setUserType('user');
+    localStorage.setItem('tanzora_user_token', token);
+    localStorage.setItem('tanzora_user_data',  JSON.stringify(authUser));
+  };
+
   // ── Universal logout ──────────────────────────────────────
   const logout = () => {
     if (userType === 'user') userLogout();
@@ -203,6 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user, token, userType, isLoading,
       adminLogin, adminLogout,
       userLogin, userRegister, userLogout,
+      googleLoginCallback,
       logout, setUser,
       // @ts-expect-error — legacy compat
       login,
