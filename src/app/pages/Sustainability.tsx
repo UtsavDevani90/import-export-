@@ -108,24 +108,6 @@ export default function Sustainability() {
         </div>
       </div>
 
-      {/* Certifications */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Environmental Certifications
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {certifications.map((cert, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 text-center border-2 border-emerald-200 hover:border-emerald-600 transition-colors">
-                <Award className="w-8 h-8 text-emerald-700 mx-auto mb-2" />
-                <p className="text-sm font-medium text-gray-800" style={{ fontFamily: 'Inter, sans-serif' }}>{cert}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Roadmap */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">

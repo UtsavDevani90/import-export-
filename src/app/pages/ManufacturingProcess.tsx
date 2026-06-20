@@ -5,7 +5,7 @@ const stages = [
   {
     icon: Truck,
     title: 'Raw Material Procurement',
-    description: 'Direct sourcing from 500+ farmers in Gujarat, Rajasthan, and Madhya Pradesh. Quality inspection at farm level.',
+    description: 'Direct sourcing from farmers in Gujarat, Rajasthan, and Madhya Pradesh. Quality inspection at farm level.',
     details: ['Farmer partnerships', 'Quality grading', 'Traceability system', 'Fair pricing']
   },
   {
@@ -41,12 +41,12 @@ const stages = [
 ];
 
 const facilities = [
-  { name: 'Total Area', value: '50,000 sq.ft.' },
-  { name: 'Processing Capacity', value: '500 MT/month' },
-  { name: 'Storage Capacity', value: '2000 MT' },
-  { name: 'Production Lines', value: '6 Dedicated Lines' },
-  { name: 'Quality Lab', value: 'NABL Accredited' },
-  { name: 'Workforce', value: '150+ Employees' }
+  { name: 'Trusted Suppliers', value: 'Across India' },
+  { name: 'Quality Control', value: 'Export Standard' },
+  { name: 'Minimum Order', value: 'Flexible MOQ' },
+  { name: 'Private Label', value: 'Custom Packaging' },
+  { name: 'Export Support', value: 'Documentation Ready' },
+  { name: 'Global Reach', value: 'Worldwide Delivery' }
 ];
 
 const equipment = [
@@ -72,7 +72,7 @@ export default function ManufacturingProcess() {
             <Factory className="w-12 h-12" />
           </div>
           <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Manufacturing Process
+            Merchant Process
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto" style={{ fontFamily: 'Inter, sans-serif' }}>
             Trusted sourcing network in Gujarat with quality-focused export operations
@@ -143,27 +143,7 @@ export default function ManufacturingProcess() {
         </div>
       </div>
 
-      {/* Equipment */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Modern Equipment & Machinery
-            </h2>
-            <p className="text-xl text-gray-600" style={{ fontFamily: 'Inter, sans-serif' }}>
-              Advanced technology for superior quality and efficiency
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {equipment.map((item, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 border border-gray-200 flex items-center gap-3 hover:border-emerald-600 hover:shadow-md transition-all">
-                <Factory className="w-5 h-5 text-emerald-700 flex-shrink-0" />
-                <span className="font-medium text-gray-800" style={{ fontFamily: 'Inter, sans-serif' }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      
 
       {/* Certifications */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
