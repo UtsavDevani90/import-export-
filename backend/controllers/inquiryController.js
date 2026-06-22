@@ -12,6 +12,9 @@ const logger        = require('../utils/logger');
 // ── @access  Public
 const submitInquiry = async (req, res, next) => {
   try {
+    console.log('[Inquiry] Request body:', JSON.stringify(req.body));
+    console.log('[Inquiry] Origin:', req.headers.origin);
+
     const {
       name, company, email, phone,
       country, product, quantity, subject, message,
@@ -21,13 +24,22 @@ const submitInquiry = async (req, res, next) => {
       return sendError(res, 400, 'Name, email, and country are required');
     }
 
+    // Sanitize IP: PostgreSQL INET type rejects IPv6-mapped IPv4 (::ffff:x.x.x.x)
+    // Extract the plain IPv4 part when the address is IPv6-mapped
+    let rawIp = req.ip || null;
+    if (rawIp && rawIp.startsWith('::ffff:')) {
+      rawIp = rawIp.substring(7); // '::ffff:127.0.0.1' → '127.0.0.1'
+    }
+    // If still an invalid-looking value, null it out rather than crash
+    const ipAddress = (rawIp && rawIp.length <= 45) ? rawIp : null;
+
     const inquiry = await Inquiry.create({
       name, company, email, phone,
       country, product, quantity, subject, message,
-      ipAddress: req.ip,
-      userAgent:  req.get('user-agent'),
+      ipAddress,
+      userAgent: req.get('user-agent'),
     });
-    console.log("Inserted Inquiry:", inquiry);
+    console.log('[Inquiry] Created successfully:', inquiry.id);
 
     // Send notification email — non-blocking
     emailService.sendInquiryNotification(inquiry).catch((err) => {
@@ -40,6 +52,7 @@ const submitInquiry = async (req, res, next) => {
       id: inquiry.id,
     });
   } catch (err) {
+    console.error('[Inquiry] Error submitting inquiry:', err.message, err.stack);
     next(err);
   }
 };

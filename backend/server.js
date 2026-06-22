@@ -64,23 +64,33 @@ const corsOptions = {
     // Strip trailing slash from CLIENT_URL (browsers never include it in Origin headers)
     const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '');
     const allowedOrigins = [
-  clientUrl,
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:3000',
-  'https://import-export-ae4u.vercel.app',
-  'https://import-export-pink.vercel.app',
-];
-    // Allow requests with no origin (Postman, curl, mobile)
-    if (!origin || allowedOrigins.includes(origin)) {
+      clientUrl,
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+      // Production Vercel deployments
+      'https://import-export-ae4u.vercel.app',
+      'https://import-export-pink.vercel.app',
+      // Preview deployment URLs (Vercel generates these per-commit)
+      'https://import-export-ae4u-lnckgcyey-utsavdevani90-2605s-projects.vercel.app',
+    ];
+    // Allow requests with no origin (Postman, curl, server-side requests, mobile apps)
+    if (!origin) {
+      return callback(null, true);
+    }
+    // Allow any *.vercel.app subdomain that belongs to this project
+    const isVercelPreview = /^https:\/\/import-export-[a-z0-9-]+-utsavdevani90-2605s-projects\.vercel\.app$/.test(origin);
+    if (allowedOrigins.includes(origin) || isVercelPreview) {
       callback(null, true);
     } else {
+      logger.warn(`CORS blocked: ${origin}`);
       callback(new Error(`CORS: Origin ${origin} is not allowed`));
     }
   },
   credentials: true,  // Allow cookies to be sent
   methods:     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200, // Some legacy browsers (IE11) choke on 204
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle pre-flight for all routes

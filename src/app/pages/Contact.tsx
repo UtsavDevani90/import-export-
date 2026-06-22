@@ -34,12 +34,30 @@ export function Contact() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // ── Debug logging (remove after confirming the fix) ──────────
+    console.log("[Inquiry] API URL:", import.meta.env.VITE_API_URL);
+    console.log("[Inquiry] Submitting inquiry:", formData);
+    // ────────────────────────────────────────────────────────────
+
     try {
-      await inquiryService.submit(formData);
+      const response = await inquiryService.submit(formData);
+      console.log("[Inquiry] Response:", response.data);
       setSubmitted(true);
     } catch (err: any) {
+      // Log the full error for debugging
+      console.error("[Inquiry] Submission failed:", err);
+      console.error("[Inquiry] Response status:", err?.response?.status);
+      console.error("[Inquiry] Response data:", err?.response?.data);
+
+      // Show the actual backend error when available
+      const backendMsg  = err?.response?.data?.message;
+      const networkMsg  = err?.message;
       setError(
-        err?.response?.data?.message ||
+        backendMsg ||
+        (networkMsg && networkMsg !== 'Network Error'
+          ? `Request failed: ${networkMsg}`
+          : "Network error — please check your connection or try again later.") ||
         "Failed to submit inquiry. Please try again or email us directly."
       );
     } finally {
