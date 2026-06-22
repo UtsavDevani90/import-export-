@@ -155,13 +155,13 @@ export function Overview() {
   } | null;
 
   const kpis = [
-    { icon: MessageSquare, label: "Total Inquiries",    value: s?.totalInquiries ?? 0,    color: "#3b82f6" },
-    { icon: Package,        label: "Total Products",    value: s?.totalProducts ?? 0,     color: "#d4a017" },
-    { icon: Users,          label: "Total Buyers",      value: s?.totalBuyers ?? 0,       color: "#a855f7" },
-    { icon: FileText,       label: "Total Quotations",  value: s?.totalQuotations ?? 0,   color: "#22c55e" },
-    { icon: TrendingUp,     label: "New Inquiries",     value: s?.newInquiries ?? 0,      color: "#f59e0b" },
-    { icon: Newspaper,      label: "Published Blogs",   value: s?.publishedBlogs ?? 0,    color: "#ec4899" },
-  ];
+  { icon: MessageSquare, label: "Total Inquiries", value: (s as any)?.inquiries?.total ?? 0, color: "#3b82f6" },
+  { icon: Package, label: "Total Products", value: (s as any)?.products?.total ?? 0, color: "#d4a017" },
+  { icon: Users, label: "Total Buyers", value: (s as any)?.buyers?.total ?? 0, color: "#a855f7" },
+  { icon: FileText, label: "Total Quotations", value: (s as any)?.quotations?.total ?? 0, color: "#22c55e" },
+  { icon: TrendingUp, label: "New Inquiries", value: (s as any)?.inquiries?.new ?? 0, color: "#f59e0b" },
+  { icon: Newspaper, label: "Published Blogs", value: (s as any)?.blogs?.published ?? 0, color: "#ec4899" },
+];
 
   if (error) {
     return (
@@ -197,12 +197,12 @@ export function Overview() {
         loading={loading}
         headers={["Name", "Company", "Status", "Date"]}
       >
-        {(s?.recentInquiries || []).length === 0 ? (
+        {((s as any)?.inquiries?.recent || []).length === 0 ? (
           <tr>
             <td colSpan={4} className="px-5 py-8 text-center text-white/30 text-sm">No inquiries yet</td>
           </tr>
         ) : (
-          (s?.recentInquiries || []).map(inq => (
+          ((s as any)?.inquiries?.recent || []).map(inq => (
             <tr
               key={inq._id}
               style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
