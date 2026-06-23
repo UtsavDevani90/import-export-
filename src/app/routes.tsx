@@ -10,7 +10,6 @@ import { Contact }            from "./pages/Contact";
 import { Certificates }       from "./pages/Certificates";
 import { Blog }               from "./pages/Blog";
 import { BlogDetail }         from "./pages/BlogDetail";
-import { DownloadCenter }     from "./pages/DownloadCenter";
 import { TradeInformation }   from "./pages/TradeInformation";
 import FAQ                    from "./pages/FAQ";
 import ExportProcess          from "./pages/ExportProcess";
@@ -62,7 +61,6 @@ export const router = createBrowserRouter([
       { path: "products/:id",     Component: ProductDetail },
       { path: "contact",          Component: Contact },
       { path: "certificates",     Component: Certificates },
-      { path: "downloads",        Component: DownloadCenter },
       { path: "trade-info",       Component: TradeInformation },
       { path: "faq",              Component: FAQ },
       { path: "export-process",   Component: ExportProcess },

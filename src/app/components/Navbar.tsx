@@ -35,7 +35,6 @@ const NAV_LINKS = [
       { label: "Export Process", path: "/export-process" },
       { label: "Industries", path: "/industries" },
       { label: "Sustainability", path: "/sustainability" },
-      { label: "Downloads", path: "/downloads" },
       { label: "FAQ", path: "/faq" },
       { label: "Blog", path: "/blog" },
       { label: "Contact", path: "/contact" },
@@ -247,7 +246,6 @@ export function Navbar() {
               <Link to="/export-process" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Export Process</Link>
               <Link to="/industries" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Industries</Link>
               <Link to="/sustainability" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Sustainability</Link>
-              <Link to="/downloads" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Downloads</Link>
               <Link to="/faq" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">FAQ</Link>
               <Link to="/blog" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Blog</Link>
               <Link to="/contact" className="block px-4 py-3 rounded-xl text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors">Contact</Link>
