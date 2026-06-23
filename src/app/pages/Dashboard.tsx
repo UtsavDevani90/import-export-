@@ -60,12 +60,11 @@ export function Dashboard() {
         >
           <Link to="/" className="flex items-center gap-3">
             <img
-            src="/logo.png"
-            alt="Tanzora Export"
+            src="/images/logo.png"
+            alt="Devani Spices Export"
             className="w-9 h-9 rounded-xl object-cover"
             />
-              T
-            </div>
+            
             <div>
               <div className="text-white font-bold text-sm" style={{ letterSpacing: "0.1em" }}>
                 TANZORA
