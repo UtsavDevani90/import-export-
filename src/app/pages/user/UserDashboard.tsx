@@ -48,8 +48,8 @@ function UserDashboardInner() {
         <div className="p-5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <Link to="/" className="flex items-center gap-3">
             <img
-            src="/images/logo.png"
-            alt="Devani Spices Export"
+            src="/logo.png"
+            alt="Tanzora Export"
             className="w-9 h-9 rounded-xl object-cover"
             />
             <div>
