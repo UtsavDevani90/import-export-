@@ -66,6 +66,8 @@ const getBuyer = async (req, res, next) => {
 // ── @access  Private/Admin
 const createBuyer = async (req, res, next) => {
   try {
+    // Accept optional extra fields (source, inquiryId) sent during "Convert to Buyer"
+    // but only persist the fields the buyers table actually has.
     const { name, company, email, phone, country, notes } = req.body;
 
     if (!name || !email) {
@@ -87,6 +89,10 @@ const createBuyer = async (req, res, next) => {
 
     return sendSuccess(res, 201, 'Buyer created successfully', buyer);
   } catch (err) {
+    // PostgreSQL unique-constraint violation (email already exists)
+    if (err.code === '23505' && err.constraint && err.constraint.includes('email')) {
+      return sendError(res, 409, 'A buyer with this email address already exists');
+    }
     next(err);
   }
 };

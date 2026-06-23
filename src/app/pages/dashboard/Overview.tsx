@@ -103,8 +103,13 @@ function InquiryModal({
         inquiryId: id,
       });
       setConvertDone(true);
-    } catch {
-      setConvertError("Already exists or failed. Check Buyers.");
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || "";
+      if (err?.response?.status === 409) {
+        setConvertError("Already a buyer — check the Buyers section.");
+      } else {
+        setConvertError(msg || "Conversion failed. Please try again.");
+      }
     }
     setConverting(false);
   };
@@ -467,8 +472,8 @@ export function Overview() {
   const s = stats as {
     totalInquiries?: number; totalProducts?: number; totalBuyers?: number;
     totalQuotations?: number; newInquiries?: number; publishedBlogs?: number;
-    recentBuyers?: { _id: string; name: string; company?: string; country?: string; createdAt: string }[];
-    recentQuotations?: { _id: string; quoteNumber?: string; buyerName?: string; status: string; total?: number; createdAt: string }[];
+    recentBuyers?: { _id?: string; id?: string; name: string; company?: string; country?: string; created_at?: string; createdAt?: string }[];
+    recentQuotations?: { _id?: string; id?: string; quote_number?: string; quoteNumber?: string; buyer_name?: string; buyerName?: string; status: string; total?: number; total_amount?: number; created_at?: string; createdAt?: string }[];
   } | null;
 
   const kpis = [
@@ -582,7 +587,7 @@ export function Overview() {
               <td className="px-5 py-3.5 text-white font-medium">{b.name}</td>
               <td className="px-5 py-3.5 text-white/50">{b.company || "—"}</td>
               <td className="px-5 py-3.5 text-white/50">{b.country || "—"}</td>
-              <td className="px-5 py-3.5 text-white/40 text-xs">{formatDate(b.createdAt)}</td>
+              <td className="px-5 py-3.5 text-white/40 text-xs">{formatDate(b.created_at || b.createdAt || "")}</td>
             </tr>
           ))
         )}
@@ -603,19 +608,19 @@ export function Overview() {
         ) : (
           (s?.recentQuotations || []).map(q => (
             <tr
-              key={q._id}
+              key={q._id || q.id}
               style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
               className="hover:bg-white/[0.02] transition-colors"
             >
               <td className="px-5 py-3.5 text-white font-medium font-mono text-xs">
-                {q.quoteNumber || q._id.slice(-6).toUpperCase()}
+                {q.quote_number || q.quoteNumber || (q._id || q.id || "").slice(-6).toUpperCase()}
               </td>
-              <td className="px-5 py-3.5 text-white/70">{q.buyerName || "—"}</td>
+              <td className="px-5 py-3.5 text-white/70">{q.buyer_name || q.buyerName || "—"}</td>
               <td className="px-5 py-3.5"><StatusBadge status={q.status} /></td>
               <td className="px-5 py-3.5 text-white/70">
-                {q.total !== undefined ? `$${Number(q.total).toLocaleString()}` : "—"}
+                {(q.total_amount ?? q.total) !== undefined ? `$${Number(q.total_amount ?? q.total).toLocaleString()}` : "—"}
               </td>
-              <td className="px-5 py-3.5 text-white/40 text-xs">{formatDate(q.createdAt)}</td>
+              <td className="px-5 py-3.5 text-white/40 text-xs">{formatDate(q.created_at || q.createdAt || "")}</td>
             </tr>
           ))
         )}

@@ -37,12 +37,11 @@ const getDashboardStats = async (req, res, next) => {
       Blog.countDocuments({ status: 'published' }),
       Certificate.countDocuments({ isActive: true }),
 
-      // Last 5 inquiries for the dashboard feed
+      // Last 5 inquiries for the dashboard feed — SELECT * to get every column
       Inquiry.find({}, {
-        sort:   'created_at DESC',
-        skip:   0,
-        limit:  5,
-        select: 'id, name, email, company, phone, country, product, quantity, subject, message, status, created_at',
+        sort:  'created_at DESC',
+        skip:  0,
+        limit: 5,
       }),
 
       // Aggregate inquiry counts per status
