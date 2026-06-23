@@ -60,8 +60,8 @@ export function Dashboard() {
         >
           <Link to="/" className="flex items-center gap-3">
             <img
-            src="/images/logo.png"
-            alt="Devani Spices Export"
+            src="/logo.png"
+            alt="Tanzora Export"
             className="w-9 h-9 rounded-xl object-cover"
             />
             
