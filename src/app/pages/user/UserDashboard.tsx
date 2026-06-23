@@ -47,7 +47,11 @@ function UserDashboardInner() {
         {/* Logo */}
         <div className="p-5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-[#0a0a0a] text-lg" style={{ background: "linear-gradient(135deg,#d4a017,#b8860b)" }}>T</div>
+            <img
+            src="/images/logo.png"
+            alt="Devani Spices Export"
+            className="w-9 h-9 rounded-xl object-cover"
+            />
             <div>
               <div className="text-white font-bold text-sm" style={{ letterSpacing: "0.1em" }}>TANZORA</div>
               <div className="text-[#d4a017] text-[8px]" style={{ letterSpacing: "0.25em" }}>EXPORT CO.</div>
