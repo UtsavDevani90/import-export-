@@ -149,7 +149,13 @@ export function Overview() {
   const s = stats as {
     totalInquiries?: number; totalProducts?: number; totalBuyers?: number;
     totalQuotations?: number; newInquiries?: number; publishedBlogs?: number;
-    recentInquiries?: { _id: string; name: string; company?: string; status: string; createdAt: string }[];
+    recentInquiries?: {
+  id: string;
+  name: string;
+  product?: string;
+  status: string;
+  created_at: string;
+}[];
     recentBuyers?: { _id: string; name: string; company?: string; country?: string; createdAt: string }[];
     recentQuotations?: { _id: string; quoteNumber?: string; buyerName?: string; status: string; total?: number; createdAt: string }[];
   } | null;
@@ -204,14 +210,18 @@ export function Overview() {
         ) : (
           ((s as any)?.inquiries?.recent || []).map(inq => (
             <tr
-              key={inq._id}
+              key={inq.id}
               style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
               className="hover:bg-white/[0.02] transition-colors"
             >
               <td className="px-5 py-3.5 text-white font-medium">{inq.name}</td>
-              <td className="px-5 py-3.5 text-white/50">{inq.company || "—"}</td>
+              <td className="px-5 py-3.5 text-white/50">
+              {inq.product || "—"}
+              </td>
               <td className="px-5 py-3.5"><StatusBadge status={inq.status} /></td>
-              <td className="px-5 py-3.5 text-white/40 text-xs">{formatDate(inq.createdAt)}</td>
+              <td className="px-5 py-3.5 text-white/40 text-xs">
+              {formatDate(inq.created_at)}
+              </td>
             </tr>
           ))
         )}
