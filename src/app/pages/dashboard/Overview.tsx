@@ -201,7 +201,7 @@ export function Overview() {
         link="/dashboard/inquiries"
         linkLabel="View All"
         loading={loading}
-        headers={["Name", "Company", "Status", "Date"]}
+        headers={["Name", "Product", "Status", "Date"]}
       >
         {((s as any)?.inquiries?.recent || []).length === 0 ? (
           <tr>
