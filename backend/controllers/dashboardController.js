@@ -42,7 +42,7 @@ const getDashboardStats = async (req, res, next) => {
         sort:   'created_at DESC',
         skip:   0,
         limit:  5,
-        select: 'id, name, email, country, product, status, created_at',
+        select: 'id, name, email, company, phone, country, product, quantity, subject, message, status, created_at',
       }),
 
       // Aggregate inquiry counts per status
