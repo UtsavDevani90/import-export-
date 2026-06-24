@@ -27,8 +27,8 @@ const updateAdminStatus = async (req, res, next) => {
       return sendError(res, 400, 'isActive must be a boolean');
     }
 
-    // Protect self-deactivation
-    if (req.params.id === req.admin.id) {
+    // Protect self-deactivation — explicit string cast prevents type confusion
+    if (String(req.params.id) === String(req.admin.id)) {
       return sendError(res, 400, 'You cannot deactivate your own account');
     }
 
@@ -62,8 +62,8 @@ const updateAdminRole = async (req, res, next) => {
       return sendError(res, 400, 'Invalid role. Must be admin or superadmin');
     }
 
-    // Protect self-role updates
-    if (req.params.id === req.admin.id) {
+    // Protect self-role updates — explicit string cast prevents type confusion
+    if (String(req.params.id) === String(req.admin.id)) {
       return sendError(res, 400, 'You cannot change your own role');
     }
 
@@ -92,8 +92,8 @@ const updateAdminRole = async (req, res, next) => {
 // ── @access  Private/Superadmin
 const deleteAdmin = async (req, res, next) => {
   try {
-    // Protect self-deletion
-    if (req.params.id === req.admin.id) {
+    // Protect self-deletion — explicit string cast prevents type confusion
+    if (String(req.params.id) === String(req.admin.id)) {
       return sendError(res, 400, 'You cannot delete your own account');
     }
 

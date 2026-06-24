@@ -1,51 +1,48 @@
 // ════════════════════════════════════════════════════════════════════
 //  utils/initializeDB.js — Automatic Database Initialization
-//  Runs on server startup to ensure all required data is seeded
-//  Safe: Idempotent, uses upserts, won't overwrite production data
+//  Runs on server startup to ensure all required data is seeded.
+//  Safe: Idempotent, uses upserts, won't overwrite existing data.
+//
+//  SECURITY: All credentials come from environment variables ONLY.
+//  Hardcoded defaults have been removed. Set these in Render/Railway:
+//    ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD
 // ════════════════════════════════════════════════════════════════════
 
 const { pool } = require('../config/db');
 const bcrypt = require('bcryptjs');
 const logger = require('./logger');
 
-// ── Admin accounts to auto-seed (read from env or use defaults) ──
+// ── Resolve admin accounts from env vars only ─────────────────
 const getAdminsToSeed = () => {
-  // If env vars are set, prioritize them (for production secrets)
-  if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
-    return [
-      {
-        name: process.env.ADMIN_NAME || 'Admin',
-        email: process.env.ADMIN_EMAIL,
-        password: process.env.ADMIN_PASSWORD,
-        role: 'superadmin',
-      },
-    ];
+  const email    = process.env.ADMIN_EMAIL?.trim();
+  const password = process.env.ADMIN_PASSWORD?.trim();
+  const name     = process.env.ADMIN_NAME?.trim() || 'Admin';
+
+  if (!email || !password) {
+    if (process.env.NODE_ENV === 'production') {
+      logger.warn(
+        '[DB INIT] ⚠️  ADMIN_EMAIL / ADMIN_PASSWORD not set. ' +
+        'No admin will be seeded. Set these env vars in Render to create the initial admin.'
+      );
+    } else {
+      logger.warn(
+        '[DB INIT] ADMIN_EMAIL / ADMIN_PASSWORD not set in .env — skipping admin seed. ' +
+        'Set them to seed an admin on startup.'
+      );
+    }
+    return [];
   }
 
-  // Otherwise use default development accounts
-  return [
-    {
-      name: 'Utsav Devani',
-      email: 'utsavdevani90@gmail.com',
-      password: 'TanzoraAdmin123',
-      role: 'superadmin',
-    },
-    {
-      name: 'Arjun Bhavani',
-      email: 'arjun@tanzoraexport.com',
-      password: 'Admin@1234',
-      role: 'admin',
-    },
-  ];
+  return [{ name, email, password, role: 'superadmin' }];
 };
 
-// ── Hash a password with bcrypt ───────────────────────────────────
+// ── Hash a password with bcrypt ───────────────────────────────
 const hashPassword = async (plainText) => {
   const salt = await bcrypt.genSalt(12);
   return bcrypt.hash(plainText, salt);
 };
 
-// ── Check if admin exists ─────────────────────────────────────────
+// ── Check if admin already exists ────────────────────────────
 const adminExists = async (email) => {
   try {
     const { rows } = await pool.query(
@@ -59,20 +56,15 @@ const adminExists = async (email) => {
   }
 };
 
-// ── Seed or update an admin account ───────────────────────────────
+// ── Seed an admin account (only if it does not exist) ─────────
 const seedAdmin = async (admin) => {
   try {
     const hashedPassword = await hashPassword(admin.password);
-    
+
     const { rows } = await pool.query(
       `INSERT INTO admins (name, email, password, role, is_active)
        VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (email) 
-       DO UPDATE SET 
-         password = $3,
-         role = $4,
-         is_active = TRUE,
-         updated_at = NOW()
+       ON CONFLICT (email) DO NOTHING
        RETURNING id, name, email, role`,
       [
         admin.name.trim(),
@@ -83,21 +75,46 @@ const seedAdmin = async (admin) => {
       ]
     );
 
-    const createdAdmin = rows[0];
-    logger.info(
-      `✅  Admin seeded: ${createdAdmin.email} | role: ${createdAdmin.role} | id: ${createdAdmin.id}`
-    );
+    if (rows[0]) {
+      logger.info(`✅  Admin seeded: ${rows[0].email} | role: ${rows[0].role} | id: ${rows[0].id}`);
+    } else {
+      logger.info(`[DB INIT] Admin already exists: ${admin.email} (skipped)`);
+    }
 
-    return createdAdmin;
+    return rows[0] || null;
   } catch (err) {
-    logger.error(
-      `❌  Failed to seed admin ${admin.email}: ${err.message}`
-    );
+    logger.error(`❌  Failed to seed admin ${admin.email}: ${err.message}`);
     throw err;
   }
 };
 
-// ── Main initialization function ──────────────────────────────────
+// ── Run pending migrations from /migrations/*.sql ─────────────
+const runMigrations = async () => {
+  const fs   = require('fs');
+  const path = require('path');
+  const migrationsDir = path.join(__dirname, '../migrations');
+
+  if (!fs.existsSync(migrationsDir)) return;
+
+  const files = fs.readdirSync(migrationsDir)
+    .filter((f) => f.endsWith('.sql'))
+    .sort();
+
+  for (const file of files) {
+    try {
+      const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf-8');
+      await pool.query(sql);
+      logger.info(`[DB INIT] Migration applied: ${file}`);
+    } catch (err) {
+      // IF NOT EXISTS guards make these safe to re-run
+      if (!err.message.includes('already exists')) {
+        logger.warn(`[DB INIT] Migration skipped/warning (${file}): ${err.message}`);
+      }
+    }
+  }
+};
+
+// ── Main initialization function ──────────────────────────────
 const initializeDatabase = async () => {
   const logTag = '[DB INIT]';
 
@@ -107,13 +124,15 @@ const initializeDatabase = async () => {
     // Verify connection
     const client = await pool.connect();
     client.release();
-
     logger.info(`${logTag} Database connection verified`);
+
+    // Run migrations (idempotent — safe to run every startup)
+    await runMigrations();
 
     // Check if admins table exists
     const { rows: tableCheck } = await pool.query(
       `SELECT EXISTS (
-         SELECT FROM information_schema.tables 
+         SELECT FROM information_schema.tables
          WHERE table_name = 'admins'
        )`
     );
@@ -126,20 +145,18 @@ const initializeDatabase = async () => {
 
     logger.info(`${logTag} Admins table verified`);
 
-    // Get admins to seed
+    // Seed admin accounts from env vars
     const adminsToSeed = getAdminsToSeed();
     logger.info(`${logTag} Found ${adminsToSeed.length} admin(s) to seed`);
 
-    // Seed each admin
     let seededCount = 0;
     for (const admin of adminsToSeed) {
       const exists = await adminExists(admin.email);
-      
-      if (exists) {
-        logger.info(`${logTag} Admin already exists: ${admin.email} (skipping update)`);
-      } else {
+      if (!exists) {
         await seedAdmin(admin);
         seededCount++;
+      } else {
+        logger.info(`${logTag} Admin already exists: ${admin.email} (skipping)`);
       }
     }
 
@@ -147,12 +164,7 @@ const initializeDatabase = async () => {
     return true;
   } catch (err) {
     logger.error(`${logTag} ❌  Database initialization FAILED: ${err.message}`);
-    logger.error(`${logTag}    ${err.stack}`);
-    
-    // Don't crash the server, just warn
-    console.error(`${logTag} WARNING: Database initialization failed, but server is still running.`);
-    console.error(`${logTag} You may need to manually seed admins. See backend/utils/seed-admin.js`);
-    
+    // Don't crash the server — just warn
     return false;
   }
 };

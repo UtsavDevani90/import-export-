@@ -5,6 +5,7 @@ const Product = require('../models/Product');
 const path    = require('path');
 const fs      = require('fs');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
+const { ALLOWED_SORTS } = require('../validators/productValidators');
 
 // ─────────────────────────────────────────────────────────────
 // PUBLIC ENDPOINTS
@@ -18,8 +19,12 @@ const getProducts = async (req, res, next) => {
     const {
       category, search,
       page  = 1, limit = 12,
-      sort  = 'created_at DESC',
     } = req.query;
+
+    // sort is validated by productQuerySchema in routes — safe to use here
+    // Extra guard: fallback to safe default if anything slips through
+    const rawSort = req.query.sort || 'created_at DESC';
+    const sort    = ALLOWED_SORTS.includes(rawSort) ? rawSort : 'created_at DESC';
 
     const filter = { status: 'active' };
     if (category && category !== 'all') filter.category = category;

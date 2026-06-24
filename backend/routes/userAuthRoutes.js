@@ -1,27 +1,48 @@
 // routes/userAuthRoutes.js — /api/users/auth/*
-// ─────────────────────────────────────────────────────────────────────────
-// NOTE: Google OAuth routes (/google and /google/callback) are intentionally
-// NOT here. They live in googleAuthRoutes.js which is mounted separately in
-// server.js to guarantee they are never touched by auth middleware.
-// ─────────────────────────────────────────────────────────────────────────
+// Security hardened:
+//   • Joi validation on register/login/change-password
+//   • Lockout middleware on login
+//   • Refresh token endpoint added
+
 const express = require('express');
 const router  = express.Router();
 const {
-  register, login, getMe, changePassword, logout,
+  register, login, refresh, getMe, changePassword, logout,
 } = require('../controllers/userAuthController');
-const { userProtect } = require('../middleware/userMiddleware');
+const { userProtect }       = require('../middleware/userMiddleware');
+const { validate }          = require('../middleware/validate');
+const { checkLockout }      = require('../middleware/loginLockout');
+const {
+  userRegisterSchema,
+  userLoginSchema,
+  changePasswordSchema,
+} = require('../validators/authValidators');
 
-// POST /api/users/auth/register  — public
-router.post('/register', register);
+// POST /api/users/auth/register  — public, validated
+router.post('/register',
+  validate(userRegisterSchema),
+  register
+);
 
-// POST /api/users/auth/login     — public
-router.post('/login', login);
+// POST /api/users/auth/login     — validated, lockout protected
+router.post('/login',
+  validate(userLoginSchema),
+  checkLockout('users'),
+  login
+);
+
+// POST /api/users/auth/refresh   — rotate refresh token
+router.post('/refresh', refresh);
 
 // GET  /api/users/auth/me        — protected
 router.get('/me', userProtect, getMe);
 
-// PUT  /api/users/auth/change-password — protected
-router.put('/change-password', userProtect, changePassword);
+// PUT  /api/users/auth/change-password — protected + validated
+router.put('/change-password',
+  userProtect,
+  validate(changePasswordSchema),
+  changePassword
+);
 
 // POST /api/users/auth/logout    — protected
 router.post('/logout', userProtect, logout);

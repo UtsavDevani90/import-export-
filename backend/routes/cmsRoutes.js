@@ -1,4 +1,9 @@
-// routes/cmsRoutes.js
+// routes/cmsRoutes.js — CMS routes (testimonials, FAQs, stats)
+// Security hardened:
+//   • Joi validation on all write operations
+//   • XSS sanitization on text content
+//   • Audit logging on mutations
+
 const express = require('express');
 const router  = express.Router();
 
@@ -8,34 +13,83 @@ const {
   getFaqs, createFaq, updateFaq, deleteFaq,
   getStats, updateStats,
 } = require('../controllers/cmsController');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { protect, adminOnly }     = require('../middleware/authMiddleware');
+const { validate }               = require('../middleware/validate');
+const { sanitizeBody }           = require('../middleware/sanitize');
+const { auditMiddleware }        = require('../middleware/auditLog');
+const {
+  createTestimonialSchema,
+  updateTestimonialSchema,
+  createFaqSchema,
+  updateFaqSchema,
+  updateStatsSchema,
+  reorderSchema,
+} = require('../validators/cmsValidators');
 
-// ── TESTIMONIALS ─────────────────────────────────────────────
-// GET  /api/cms/testimonials          — public list
-router.get('/testimonials',              getTestimonials);
-// POST /api/cms/testimonials           — create (admin)
-router.post('/testimonials',             protect, adminOnly, createTestimonial);
-// PUT  /api/cms/testimonials/reorder   — reorder (admin) — must be before /:id
-router.put('/testimonials/reorder',      protect, adminOnly, reorderTestimonials);
-// PUT  /api/cms/testimonials/:id       — update (admin)
-router.put('/testimonials/:id',          protect, adminOnly, updateTestimonial);
-// DELETE /api/cms/testimonials/:id     — delete (admin)
-router.delete('/testimonials/:id',       protect, adminOnly, deleteTestimonial);
+// ── TESTIMONIALS ──────────────────────────────────────────────
+router.get('/testimonials', getTestimonials);
 
-// ── FAQs ─────────────────────────────────────────────────────
-// GET  /api/cms/faqs                  — public list
-router.get('/faqs',                      getFaqs);
-// POST /api/cms/faqs                   — create (admin)
-router.post('/faqs',                     protect, adminOnly, createFaq);
-// PUT  /api/cms/faqs/:id              — update (admin)
-router.put('/faqs/:id',                  protect, adminOnly, updateFaq);
-// DELETE /api/cms/faqs/:id            — delete (admin)
-router.delete('/faqs/:id',               protect, adminOnly, deleteFaq);
+router.post('/testimonials',
+  protect, adminOnly,
+  validate(createTestimonialSchema),
+  sanitizeBody(['content', 'client_name', 'client_company']),
+  auditMiddleware('cms.testimonial.created'),
+  createTestimonial
+);
 
-// ── STATS ────────────────────────────────────────────────────
-// GET /api/cms/stats                  — public
-router.get('/stats',                     getStats);
-// PUT /api/cms/stats                   — batch update (admin)
-router.put('/stats',                     protect, adminOnly, updateStats);
+router.put('/testimonials/reorder',
+  protect, adminOnly,
+  validate(reorderSchema),
+  reorderTestimonials
+);
+
+router.put('/testimonials/:id',
+  protect, adminOnly,
+  validate(updateTestimonialSchema),
+  sanitizeBody(['content', 'client_name', 'client_company']),
+  auditMiddleware('cms.testimonial.updated'),
+  updateTestimonial
+);
+
+router.delete('/testimonials/:id',
+  protect, adminOnly,
+  auditMiddleware('cms.testimonial.deleted'),
+  deleteTestimonial
+);
+
+// ── FAQs ──────────────────────────────────────────────────────
+router.get('/faqs', getFaqs);
+
+router.post('/faqs',
+  protect, adminOnly,
+  validate(createFaqSchema),
+  sanitizeBody(['question', 'answer']),
+  auditMiddleware('cms.faq.created'),
+  createFaq
+);
+
+router.put('/faqs/:id',
+  protect, adminOnly,
+  validate(updateFaqSchema),
+  sanitizeBody(['question', 'answer']),
+  auditMiddleware('cms.faq.updated'),
+  updateFaq
+);
+
+router.delete('/faqs/:id',
+  protect, adminOnly,
+  auditMiddleware('cms.faq.deleted'),
+  deleteFaq
+);
+
+// ── STATS ─────────────────────────────────────────────────────
+router.get('/stats', getStats);
+
+router.put('/stats',
+  protect, adminOnly,
+  validate(updateStatsSchema),
+  auditMiddleware('cms.stats.updated'),
+  updateStats
+);
 
 module.exports = router;

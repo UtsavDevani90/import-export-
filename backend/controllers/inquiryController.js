@@ -12,9 +12,6 @@ const logger        = require('../utils/logger');
 // ── @access  Public
 const submitInquiry = async (req, res, next) => {
   try {
-    console.log('[Inquiry] Request body:', JSON.stringify(req.body));
-    console.log('[Inquiry] Origin:', req.headers.origin);
-
     const {
       name, company, email, phone,
       country, product, quantity, subject, message,
@@ -39,7 +36,7 @@ const submitInquiry = async (req, res, next) => {
       ipAddress,
       userAgent: req.get('user-agent'),
     });
-    console.log('[Inquiry] Created successfully:', inquiry.id);
+    logger.info(`[Inquiry] Created: ${inquiry.id} from ${email}`);
 
     // Send notification email — non-blocking
     emailService.sendInquiryNotification(inquiry).catch((err) => {
@@ -52,7 +49,7 @@ const submitInquiry = async (req, res, next) => {
       id: inquiry.id,
     });
   } catch (err) {
-    console.error('[Inquiry] Error submitting inquiry:', err.message, err.stack);
+    logger.error(`[Inquiry] Error submitting inquiry: ${err.message}`);
     next(err);
   }
 };
