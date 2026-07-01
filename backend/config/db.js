@@ -47,15 +47,19 @@ pool.on('error', (err) => {
 });
 
 // ── Connect & verify on startup ───────────────────────────────
+// NOTE: This must NEVER call process.exit(). Express must always
+// bind to a port first. DB errors are logged and the server continues.
+// Individual request handlers will surface DB errors as 503s.
 const connectDB = async () => {
   try {
     const client = await pool.connect();
-    logger.info('✅  PostgreSQL Connected Successfully');
+    logger.info('✅  PostgreSQL connected successfully');
     client.release();
   } catch (err) {
     logger.error(`❌  PostgreSQL connection failed: ${err.message}`);
-    logger.error('💀  Check DATABASE_URL and ensure the database is accessible.');
-    process.exit(1);
+    logger.error('    Check DATABASE_URL and ensure the database is accessible.');
+    logger.warn('    Server will continue — DB-dependent routes will return errors until connection is restored.');
+    // Intentionally NOT calling process.exit() — Express must start regardless
   }
 };
 

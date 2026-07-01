@@ -44,9 +44,6 @@ const userRoutes        = require('./routes/userRoutes');
 const adminUserRoutes   = require('./routes/adminUserRoutes');
 const googleAuthRoutes  = require('./routes/googleAuthRoutes');
 
-// ── Connect to PostgreSQL ─────────────────────────────────────
-connectDB();
-
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -301,36 +298,87 @@ app.use(errorHandler);
 
 // ═══════════════════════════════════════════════════════════
 //  START SERVER
+//  Express MUST bind to a port first. All async init (DB
+//  connection, migrations, admin seeding) runs AFTER listen()
+//  so Render's port scanner always finds an open port.
 // ═══════════════════════════════════════════════════════════
 
 const PORT = process.env.PORT || 5000;
+let server;
 
-const server = app.listen(PORT, () => {
-  logger.info(`🚀  Tanzora Export API running on port ${PORT} [${process.env.NODE_ENV}]`);
-  logger.info(`📡  Health: http://localhost:${PORT}/api/health`);
+try {
+  server = app.listen(PORT, async () => {
+    logger.info(`🚀  Tanzora Export API listening on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+    logger.info(`📡  Health check: http://localhost:${PORT}/api/health`);
 
-  // Auto-initialize database (runs migrations + seeds admins from env vars)
-  initializeDatabase().catch((err) => {
-    logger.error(`Database initialization error: ${err.message}`);
+    // ── Phase A: Connect to the database ────────────────────
+    // connectDB() is non-fatal — errors are logged and the server
+    // continues serving requests (DB-dependent routes return 503).
+    logger.info('[STARTUP] Connecting to PostgreSQL...');
+    await connectDB();
+
+    // ── Phase B: Run migrations + seed admin ─────────────────
+    // initializeDatabase() is also fully wrapped in try/catch.
+    logger.info('[STARTUP] Running database initialization...');
+    try {
+      await initializeDatabase();
+      logger.info('[STARTUP] ✅  Database initialization complete');
+    } catch (err) {
+      logger.error(`[STARTUP] ❌  Database initialization error: ${err.message}`);
+      logger.error(err.stack);
+      // Non-fatal — server keeps running
+    }
+
+    logger.info('[STARTUP] ✅  Server fully ready');
   });
-});
+} catch (err) {
+  // Synchronous listen() error (e.g., port already in use)
+  console.error(`[STARTUP] FATAL: Failed to start Express server: ${err.message}`);
+  console.error(err.stack);
+  process.exit(1);
+}
 
 // ── Graceful shutdown ─────────────────────────────────────────
-process.on('unhandledRejection', (err) => {
-  logger.error(`💀  Unhandled Promise Rejection: ${err.message}`);
-  logger.error(err.stack);
-  server.close(() => process.exit(1));
+// Helper: close server with a timeout fallback so a hung connection
+// never blocks the process from exiting.
+const gracefulShutdown = (exitCode) => {
+  const timeout = setTimeout(() => {
+    logger.warn('[SHUTDOWN] Server close timed out — forcing exit');
+    process.exit(exitCode);
+  }, 10000);
+  timeout.unref(); // Don't prevent other cleanup from running
+
+  if (server && server.listening) {
+    server.close(() => {
+      clearTimeout(timeout);
+      process.exit(exitCode);
+    });
+  } else {
+    clearTimeout(timeout);
+    process.exit(exitCode);
+  }
+};
+
+process.on('unhandledRejection', (reason, promise) => {
+  const msg = reason instanceof Error ? reason.message : String(reason);
+  const stack = reason instanceof Error ? reason.stack : '';
+  logger.error(`💀  Unhandled Promise Rejection: ${msg}`);
+  if (stack) logger.error(stack);
+  // Log-only — do NOT exit. Render will restart if truly unrecoverable.
+  // Exiting here on a transient rejection (e.g., a failed DB query) would
+  // take down the entire server unnecessarily.
 });
 
 process.on('uncaughtException', (err) => {
   logger.error(`💀  Uncaught Exception: ${err.message}`);
   logger.error(err.stack);
-  server.close(() => process.exit(1));
+  // Uncaught exceptions leave the process in an undefined state — must exit.
+  gracefulShutdown(1);
 });
 
 process.on('SIGTERM', () => {
-  logger.info('SIGTERM received — shutting down gracefully');
-  server.close(() => process.exit(0));
+  logger.info('[SHUTDOWN] SIGTERM received — shutting down gracefully');
+  gracefulShutdown(0);
 });
 
 module.exports = app;

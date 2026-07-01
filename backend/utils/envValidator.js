@@ -45,27 +45,28 @@ const validateEnv = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   let fatal = false;
 
-  // Critical vars — must exist in all environments
+  logger.info('[ENV] Validating environment variables...');
+
+  // ── Truly required — server cannot function without these ────
   const criticalVars = ['DATABASE_URL', 'JWT_SECRET'];
   for (const v of criticalVars) {
     if (!requireEnv(v)) fatal = true;
   }
 
-  // JWT_REFRESH_SECRET required when refresh tokens are in use
-  if (!requireEnv('JWT_REFRESH_SECRET')) {
-    logger.warn('[ENV] JWT_REFRESH_SECRET not set — refresh token rotation disabled.');
-    // Non-fatal but strongly recommended
-  }
-
-  // Secret strength
+  // ── Secret strength checks ───────────────────────────────────
   if (process.env.JWT_SECRET && !validateSecret('JWT_SECRET', 32)) fatal = true;
-  if (process.env.JWT_REFRESH_SECRET && !validateSecret('JWT_REFRESH_SECRET', 32)) {
+
+  // ── Optional but strongly recommended ───────────────────────
+  // JWT_REFRESH_SECRET — enables refresh token rotation.
+  // Missing = refresh tokens disabled, NOT a fatal error.
+  if (!process.env.JWT_REFRESH_SECRET || process.env.JWT_REFRESH_SECRET.trim() === '') {
+    logger.warn('[ENV] JWT_REFRESH_SECRET not set — refresh token rotation disabled.');
+  } else if (!validateSecret('JWT_REFRESH_SECRET', 32)) {
     logger.warn('[ENV] JWT_REFRESH_SECRET is weak — please rotate it before production.');
   }
 
-  // Production-specific checks
+  // ── Production-specific warnings ────────────────────────────
   if (isProduction) {
-    // Warn if register endpoint is left open
     if (process.env.ALLOW_ADMIN_REGISTER === 'true') {
       logger.warn(
         '[ENV] WARNING: ALLOW_ADMIN_REGISTER=true in production. ' +
@@ -73,25 +74,29 @@ const validateEnv = () => {
       );
     }
 
-    // Warn if debug-level logging is on
     if (process.env.LOG_LEVEL === 'debug') {
       logger.warn('[ENV] LOG_LEVEL=debug in production — this may expose sensitive data in logs.');
     }
 
-    // Ensure CLIENT_URL is set (not localhost)
     const clientUrl = process.env.CLIENT_URL || '';
     if (!clientUrl || clientUrl.includes('localhost')) {
       logger.warn('[ENV] CLIENT_URL is not set or points to localhost in production.');
     }
+
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      logger.warn('[ENV] Google OAuth credentials not set — Google login will be unavailable.');
+    }
   }
 
+  // ── Exit only if truly critical vars are missing in production ─
   if (fatal && isProduction) {
-    logger.error('[ENV] Critical environment validation failed. Server will not start.');
+    logger.error('[ENV] ❌  Critical environment validation failed — DATABASE_URL or JWT_SECRET is missing.');
+    logger.error('[ENV]     Set these in your Render environment variables and redeploy.');
     process.exit(1);
   } else if (fatal) {
     logger.warn('[ENV] Critical environment issues detected (dev mode — continuing anyway).');
   } else {
-    logger.info('[ENV] Environment validation passed ✅');
+    logger.info('[ENV] ✅  Environment validation passed');
   }
 };
 
