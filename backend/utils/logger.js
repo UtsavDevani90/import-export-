@@ -71,15 +71,13 @@ const logger = createLogger({
 });
 
 // ── Pretty console output in development ─────────────────────
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new transports.Console({
-    format: combine(
-      colorize({ all: true }),
-      timestamp({ format: 'HH:mm:ss' }),
-      consoleFormat
-    ),
-  }));
-}
+logger.add(new transports.Console({
+  format: combine(
+    colorize({ all: true }),
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    consoleFormat
+  ),
+}));
 
 // ── Attach redact helper to logger instance ───────────────────
 logger.redact = redact;
