@@ -23,7 +23,6 @@ const SENSITIVE_FIELDS = new Set([
   'jwt', 'cookie', 'admin_token', 'user_token', 'refresh_token',
   'admin_refresh_token', 'user_refresh_token', 'DATABASE_URL',
   'JWT_SECRET', 'JWT_REFRESH_SECRET', 'GOOGLE_CLIENT_SECRET',
-  'TURNSTILE_SECRET_KEY',
 ]);
 
 // ── Redact sensitive keys from an object (deep) ───────────────

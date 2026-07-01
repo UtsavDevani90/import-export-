@@ -1,7 +1,6 @@
 // routes/inquiryRoutes.js — Contact/inquiry form routes
 // Security hardened:
 //   • Joi validation on submit (prevents injection + sets length limits)
-//   • Cloudflare Turnstile bot protection on public submit
 //   • Sanitize plain text fields before storage
 //   • Dedicated rate limiter applied in server.js
 
@@ -15,7 +14,7 @@ const {
 const { protect, adminOnly }     = require('../middleware/authMiddleware');
 const { validate }               = require('../middleware/validate');
 const { sanitizeBody }           = require('../middleware/sanitize');
-const { verifyTurnstile }        = require('../middleware/turnstile');
+
 const {
   submitInquirySchema,
   updateInquiryStatusSchema,
@@ -24,7 +23,6 @@ const {
 
 // ── Public ────────────────────────────────────────────────────
 router.post('/',
-  verifyTurnstile,                                          // Bot check
   validate(submitInquirySchema),                            // Schema validation
   sanitizeBody(['name', 'company', 'message', 'subject']), // Strip XSS
   submitInquiry

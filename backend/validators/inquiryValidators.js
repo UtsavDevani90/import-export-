@@ -29,8 +29,6 @@ const submitInquirySchema = Joi.object({
   subject:  Joi.string().trim().max(200).optional().allow('', null),
   message:  Joi.string().trim().max(2000).optional().allow('', null),
 
-  // Turnstile token (validated separately by middleware)
-  'cf-turnstile-response': Joi.string().optional().allow('', null),
 });
 
 // ── Update inquiry status (admin) ─────────────────────────────
