@@ -78,7 +78,7 @@ export function Login() {
             <img
               src="/logo.png"
               alt="Tanzora Export"
-              className="w-14 h-14 object-contain"
+              className="w-12 h-12 rounded-full object-cover border border-[#d4a017]"
             />
             <div>
               <div className="text-white font-bold text-base" style={{ letterSpacing: "0.12em" }}>

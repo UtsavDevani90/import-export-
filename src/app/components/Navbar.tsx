@@ -114,7 +114,7 @@ export function Navbar() {
                 <img 
                 src="/logo.png"
                 alt="Tanzora Export"
-                className="w-12 h-12 object-contain"
+                className="w-12 h-12 rounded-full object-cover border border-[#d4a017]"
                 />
               </div>
               <div>

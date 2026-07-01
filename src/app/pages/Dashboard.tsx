@@ -62,7 +62,7 @@ export function Dashboard() {
             <img
             src="/logo.png"
             alt="Tanzora Export"
-            className="w-9 h-9 rounded-xl object-cover"
+            className="w-12 h-12 rounded-full object-cover border border-[#d4a017]"
             />
             
             <div>

@@ -91,7 +91,7 @@ export function Footer() {
             <img
             src="/logo.png"
             alt="Tanzora Export"
-            className="w-10 h-10 object-contain"
+            className="w-12 h-12 rounded-full object-cover border border-[#d4a017]"
             />
             <div>
               <div
