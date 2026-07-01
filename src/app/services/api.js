@@ -218,6 +218,8 @@ export const userAuthService = {
   logout:          ()                     => api.post('/users/auth/logout'),
   getMe:           ()                     => api.get('/users/auth/me'),
   changePassword:  (data)                 => api.put('/users/auth/change-password', data),
+  forgotPassword:  (email)                => api.post('/users/auth/forgot-password', { email }),
+  resetPassword:   (token, newPassword)   => api.post('/users/auth/reset-password', { token, newPassword }),
 };
 
 // ════════════════════════════════════════════════════════════

@@ -196,6 +196,46 @@ const remove = async (id) => {
   return rows[0] || null;
 };
 
+// ── Store hashed reset token + expiry ─────────────────────────
+// rawToken is never stored — only its SHA-256 hex hash.
+const setResetToken = async (email, tokenHash, expiresAt) => {
+  const { rows } = await pool.query(
+    `UPDATE users
+     SET reset_password_token   = $1,
+         reset_password_expires = $2,
+         updated_at             = NOW()
+     WHERE email = $3
+     RETURNING id`,
+    [tokenHash, expiresAt, email.toLowerCase().trim()]
+  );
+  return rows[0] || null;
+};
+
+// ── Find user by valid (unexpired) reset token hash ───────────
+const findByResetToken = async (tokenHash) => {
+  const { rows } = await pool.query(
+    `SELECT id, full_name, email, is_active
+     FROM users
+     WHERE reset_password_token   = $1
+       AND reset_password_expires > NOW()
+     LIMIT 1`,
+    [tokenHash]
+  );
+  return rows[0] || null;
+};
+
+// ── Clear reset token after successful password reset ─────────
+const clearResetToken = async (id) => {
+  await pool.query(
+    `UPDATE users
+     SET reset_password_token   = NULL,
+         reset_password_expires = NULL,
+         updated_at             = NOW()
+     WHERE id = $1`,
+    [id]
+  );
+};
+
 // ── Favorites ─────────────────────────────────────────────────
 const getFavorites = async (userId) => {
   const { rows } = await pool.query(
@@ -297,10 +337,16 @@ module.exports = {
   findAll,
   updateStatus,
   remove,
+  // Password reset
+  setResetToken,
+  findByResetToken,
+  clearResetToken,
+  // Favorites
   getFavorites,
   addFavorite,
   removeFavorite,
   isFavorite,
+  // Notifications
   getNotifications,
   markNotificationRead,
   markAllNotificationsRead,

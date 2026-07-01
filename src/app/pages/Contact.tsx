@@ -424,7 +424,7 @@ export function Contact() {
           <div className="rounded-2xl overflow-hidden shadow-xl border border-amber-100 h-80">
             <iframe
               title="Tanzora Export Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59354.47778012755!2d71.17985092367766!3d21.599391280072645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395880c72d516845%3A0x4e950cffb505bb12!2sAmreli%2C%20Gujarat%20365601!5e0!3m2!1sen!2sin!4v1781883948390!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59354.47778012755!2d71.17985092367766!3d21.599391280072645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395880c72d516845%3A0x4e950cffb505bb12!2sAmreli%2C%20Gujarat%20365601!5e0!3m2!1sen!2sin!4v1781883948390!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}

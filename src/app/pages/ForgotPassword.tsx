@@ -1,18 +1,26 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Mail, ArrowLeft, CheckCircle2, Send } from "lucide-react";
+import { Mail, ArrowLeft, CheckCircle2, Send, AlertCircle } from "lucide-react";
+import { userAuthService } from "../services/api";
 
 export function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setSent(true);
-    setLoading(false);
+    setError("");
+    try {
+      await userAuthService.forgotPassword(email);
+      setSent(true);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to send reset link. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,6 +63,13 @@ export function ForgotPassword() {
               <p className="text-white/45 text-sm mb-6">
                 No worries! Enter your email address and we'll send you a reset link.
               </p>
+
+              {error && (
+                <div className="mb-6 p-4 rounded-xl flex items-start gap-3" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                  <AlertCircle size={18} className="text-red-400 mt-0.5 shrink-0"/>
+                  <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

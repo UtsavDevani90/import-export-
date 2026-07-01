@@ -77,10 +77,36 @@ const userLoginSchema = Joi.object({
   password: Joi.string().min(1).max(128).required(),
 });
 
+// ── Forgot password ───────────────────────────────────────────
+const forgotPasswordSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(254)
+    .required()
+    .messages({
+      'string.email':  'Please provide a valid email address',
+      'any.required':  'Email is required',
+    }),
+});
+
+// ── Reset password ────────────────────────────────────────────
+const resetPasswordSchema = Joi.object({
+  token:       Joi.string().hex().length(64).required().messages({
+    'string.hex':    'Invalid reset token format',
+    'string.length': 'Invalid reset token length',
+    'any.required':  'Reset token is required',
+  }),
+  newPassword: passwordRule.required().messages({
+    'any.required': 'New password is required',
+  }),
+});
+
 module.exports = {
   loginSchema,
   registerSchema,
   changePasswordSchema,
   userRegisterSchema,
   userLoginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
 };
