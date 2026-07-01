@@ -42,15 +42,17 @@ try {
   process.exit(1);
 }
 
-console.log('[BOOT] Running validateEnv()...');
+console.log("[1] Before validateEnv");
+
 try {
-  validateEnv();
-  console.log('[BOOT] validateEnv() completed');
-} catch (e) {
-  console.error('[BOOT] FATAL: validateEnv() threw:', e.message);
-  console.error(e.stack);
-  process.exit(1);
+    console.log("[2] Calling validateEnv()");
+    validateEnv();
+    console.log("[3] validateEnv returned");
+} catch (err) {
+    console.error("VALIDATE ERROR:", err);
 }
+
+console.log("[4] After validateEnv");
 
 // ── Core npm modules ──────────────────────────────────────────
 console.log('[BOOT] Loading express...');
