@@ -20,7 +20,11 @@ export function ForgotPassword() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 mb-10">
-          <div className="w-12 h-12 rounded-full object-cover border border-[#d4a017]" style={{ background: "linear-gradient(135deg,#d4a017,#b8860b)" }}>T</div>
+          <img
+            src="/logo.png"
+            alt="Tanzora Export"
+            className="w-12 h-12 rounded-full object-cover border border-[#d4a017]"
+            />
           <div>
             <div className="text-white font-bold text-sm" style={{ letterSpacing: "0.12em" }}>TANZORA</div>
             <div className="text-[#d4a017] text-[8px]" style={{ letterSpacing: "0.3em" }}>EXPORT CO.</div>
