@@ -4,48 +4,187 @@
 //  Production-grade security hardening — 2026
 // ════════════════════════════════════════════════════════════
 
+// ─────────────────────────────────────────────────────────────
+//  DIAGNOSTIC STARTUP LOGGING
+//  Every require() is wrapped in try/catch.
+//  console.log is used deliberately (synchronous stdout,
+//  works before Winston/logger loads).
+//  Remove this block once the root cause is confirmed.
+// ─────────────────────────────────────────────────────────────
+console.log('[BOOT] ▶ Starting server.js');
+
 // ── Load environment variables FIRST ─────────────────────────
-require('dotenv').config();
+console.log('[BOOT] Loading dotenv...');
+try {
+  require('dotenv').config();
+  console.log('[BOOT] dotenv loaded. NODE_ENV=' + process.env.NODE_ENV);
+  console.log('[BOOT] PORT=' + process.env.PORT);
+  console.log('[BOOT] DATABASE_URL set=' + !!process.env.DATABASE_URL);
+  console.log('[BOOT] JWT_SECRET set=' + !!process.env.JWT_SECRET);
+  console.log('[BOOT] JWT_REFRESH_SECRET set=' + !!process.env.JWT_REFRESH_SECRET);
+  console.log('[BOOT] GOOGLE_CLIENT_ID set=' + !!process.env.GOOGLE_CLIENT_ID);
+  console.log('[BOOT] GOOGLE_CLIENT_SECRET set=' + !!process.env.GOOGLE_CLIENT_SECRET);
+} catch (e) {
+  console.error('[BOOT] FATAL: dotenv failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
 
 // ── Validate environment before anything else ─────────────────
-const { validateEnv } = require('./utils/envValidator');
-validateEnv();
+console.log('[BOOT] Loading envValidator...');
+let validateEnv;
+try {
+  validateEnv = require('./utils/envValidator').validateEnv;
+  console.log('[BOOT] envValidator loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: envValidator require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
 
-const express      = require('express');
-const cors         = require('cors');
-const helmet       = require('helmet');
-const morgan       = require('morgan');
-const rateLimit    = require('express-rate-limit');
-const cookieParser = require('cookie-parser');
-const path         = require('path');
-const fs           = require('fs');
+console.log('[BOOT] Running validateEnv()...');
+try {
+  validateEnv();
+  console.log('[BOOT] validateEnv() completed');
+} catch (e) {
+  console.error('[BOOT] FATAL: validateEnv() threw:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
 
-const { connectDB }  = require('./config/db');
-const logger         = require('./utils/logger');
-const { notFound, errorHandler } = require('./middleware/errorMiddleware');
-const { initializeDatabase }     = require('./utils/initializeDB');
-const passport       = require('./config/passport');
+// ── Core npm modules ──────────────────────────────────────────
+console.log('[BOOT] Loading express...');
+let express, cors, helmet, morgan, rateLimit, cookieParser, path, fs;
+try {
+  express      = require('express');
+  console.log('[BOOT] express loaded');
+  cors         = require('cors');
+  console.log('[BOOT] cors loaded');
+  helmet       = require('helmet');
+  console.log('[BOOT] helmet loaded');
+  morgan       = require('morgan');
+  console.log('[BOOT] morgan loaded');
+  rateLimit    = require('express-rate-limit');
+  console.log('[BOOT] express-rate-limit loaded');
+  cookieParser = require('cookie-parser');
+  console.log('[BOOT] cookie-parser loaded');
+  path         = require('path');
+  fs           = require('fs');
+  console.log('[BOOT] path + fs loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: npm module require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
+
+// ── Internal modules ──────────────────────────────────────────
+console.log('[BOOT] Loading config/db...');
+let connectDB;
+try {
+  connectDB = require('./config/db').connectDB;
+  console.log('[BOOT] config/db loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: config/db require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
+
+console.log('[BOOT] Loading utils/logger...');
+let logger;
+try {
+  logger = require('./utils/logger');
+  console.log('[BOOT] utils/logger loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: utils/logger require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
+
+console.log('[BOOT] Loading middleware/errorMiddleware...');
+let notFound, errorHandler;
+try {
+  ({ notFound, errorHandler } = require('./middleware/errorMiddleware'));
+  console.log('[BOOT] errorMiddleware loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: errorMiddleware require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
+
+console.log('[BOOT] Loading utils/initializeDB...');
+let initializeDatabase;
+try {
+  initializeDatabase = require('./utils/initializeDB').initializeDatabase;
+  console.log('[BOOT] initializeDB loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: initializeDB require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
+
+console.log('[BOOT] Loading config/passport...');
+let passport;
+try {
+  passport = require('./config/passport');
+  console.log('[BOOT] config/passport loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: config/passport require failed:', e.message);
+  console.error(e.stack);
+  process.exit(1);
+}
 
 // ── Route imports ─────────────────────────────────────────────
-const authRoutes        = require('./routes/authRoutes');
-const productRoutes     = require('./routes/productRoutes');
-const inquiryRoutes     = require('./routes/inquiryRoutes');
-const blogRoutes        = require('./routes/blogRoutes');
-const certificateRoutes = require('./routes/certificateRoutes');
-const dashboardRoutes   = require('./routes/dashboardRoutes');
-const buyerRoutes       = require('./routes/buyerRoutes');
-const quotationRoutes   = require('./routes/quotationRoutes');
-const cmsRoutes         = require('./routes/cmsRoutes');
-const settingsRoutes    = require('./routes/settingsRoutes');
-const activityLogRoutes = require('./routes/activityLogRoutes');
-const adminRoutes       = require('./routes/adminRoutes');
-const userAuthRoutes    = require('./routes/userAuthRoutes');
-const userRoutes        = require('./routes/userRoutes');
-const adminUserRoutes   = require('./routes/adminUserRoutes');
-const googleAuthRoutes  = require('./routes/googleAuthRoutes');
+console.log('[BOOT] Loading routes...');
+let authRoutes, productRoutes, inquiryRoutes, blogRoutes, certificateRoutes;
+let dashboardRoutes, buyerRoutes, quotationRoutes, cmsRoutes, settingsRoutes;
+let activityLogRoutes, adminRoutes, userAuthRoutes, userRoutes, adminUserRoutes, googleAuthRoutes;
 
+try {
+  console.log('[BOOT]   authRoutes...');
+  authRoutes        = require('./routes/authRoutes');
+  console.log('[BOOT]   productRoutes...');
+  productRoutes     = require('./routes/productRoutes');
+  console.log('[BOOT]   inquiryRoutes...');
+  inquiryRoutes     = require('./routes/inquiryRoutes');
+  console.log('[BOOT]   blogRoutes...');
+  blogRoutes        = require('./routes/blogRoutes');
+  console.log('[BOOT]   certificateRoutes...');
+  certificateRoutes = require('./routes/certificateRoutes');
+  console.log('[BOOT]   dashboardRoutes...');
+  dashboardRoutes   = require('./routes/dashboardRoutes');
+  console.log('[BOOT]   buyerRoutes...');
+  buyerRoutes       = require('./routes/buyerRoutes');
+  console.log('[BOOT]   quotationRoutes...');
+  quotationRoutes   = require('./routes/quotationRoutes');
+  console.log('[BOOT]   cmsRoutes...');
+  cmsRoutes         = require('./routes/cmsRoutes');
+  console.log('[BOOT]   settingsRoutes...');
+  settingsRoutes    = require('./routes/settingsRoutes');
+  console.log('[BOOT]   activityLogRoutes...');
+  activityLogRoutes = require('./routes/activityLogRoutes');
+  console.log('[BOOT]   adminRoutes...');
+  adminRoutes       = require('./routes/adminRoutes');
+  console.log('[BOOT]   userAuthRoutes...');
+  userAuthRoutes    = require('./routes/userAuthRoutes');
+  console.log('[BOOT]   userRoutes...');
+  userRoutes        = require('./routes/userRoutes');
+  console.log('[BOOT]   adminUserRoutes...');
+  adminUserRoutes   = require('./routes/adminUserRoutes');
+  console.log('[BOOT]   googleAuthRoutes...');
+  googleAuthRoutes  = require('./routes/googleAuthRoutes');
+  console.log('[BOOT] All routes loaded');
+} catch (e) {
+  console.error('[BOOT] FATAL: Route require failed:', e.message);
+  console.error('[BOOT] File that caused failure:', e.requireStack ? e.requireStack.join(' -> ') : '(check stack below)');
+  console.error(e.stack);
+  process.exit(1);
+}
+
+console.log('[BOOT] Creating Express app...');
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
+console.log('[BOOT] Express app created. isProduction=' + isProduction);
+
 
 // Trust Render's proxy (needed for correct req.ip behind load balancer)
 app.set('trust proxy', 1);
@@ -306,8 +445,10 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 let server;
 
+console.log('[BOOT] About to call app.listen() on port ' + PORT + '...');
 try {
   server = app.listen(PORT, async () => {
+    console.log('[BOOT] ✅ app.listen() callback fired — port is BOUND on ' + PORT);
     logger.info(`🚀  Tanzora Export API listening on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
     logger.info(`📡  Health check: http://localhost:${PORT}/api/health`);
 
