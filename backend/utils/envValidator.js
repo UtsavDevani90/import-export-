@@ -1,6 +1,12 @@
 // utils/envValidator.js — Startup environment variable validation
 // Called once at boot. Exits the process if critical vars are missing or insecure.
 // Logs warnings for non-critical issues.
+console.log("===== ENV DEBUG =====");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("DATABASE_URL:", !!process.env.DATABASE_URL);
+console.log("JWT_SECRET:", !!process.env.JWT_SECRET);
+console.log("JWT_REFRESH_SECRET:", !!process.env.JWT_REFRESH_SECRET);
+console.log("=====================");
 
 const logger = require('./logger');
 
